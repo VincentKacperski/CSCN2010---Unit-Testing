@@ -12,7 +12,6 @@ namespace Bill.Tests
             decimal billTotal = 100.00m;
             TipMode tm = TipMode.none;
             decimal expectedTip = 0.0m;
-
             Bill bill = new Bill();
 
             //Act
@@ -24,27 +23,33 @@ namespace Bill.Tests
         [TestMethod]
         public void ComputeTip_PercentTipMode_ReturnsCorrectPercent()
         {
+            //Arrange
             decimal billTotal = 120.00m;
             decimal percentage = 0.15m;
             decimal expectedValue = 18.00m;
             TipMode tipMode = TipMode.percent;
-
             Bill bill = new Bill();
 
+            //Act
             decimal actualResult = bill.calculateTip(billTotal, tipMode, percentage); 
 
+            //Assert
             Assert.AreEqual(expectedValue, actualResult);
         }
 
         public void ComputeTip_FixedTipMode_ReturnsFixedAmount()
         {
+            //Arrange
             decimal billTotal = 100.00m;
             TipMode tm = TipMode.fixed_tip;
             decimal fixedValue = 15.00m;
             decimal expectedValue = 15.00m;
             Bill bill = new Bill();
 
+            //Act
             decimal actualResult = bill.calculateTip(billTotal, tm, fixedValue);
+
+            //Assert
             Assert.AreEqual(expectedValue, actualResult);
         }
 
