@@ -8,16 +8,16 @@ namespace Bill.Tests
         [TestMethod]
         public void ComputeTip_NoTipMode_ReturnsZero()
         {
-           // arrange
+            //Arrange
             decimal billTotal = 100.00m;
             TipMode tm = TipMode.none;
             decimal expectedTip = 0.0m;
 
             Bill bill = new Bill();
 
-            // act
+            //Act
             decimal actualResult = bill.calculateTip(billTotal, tm);
-            // assert
+            //Assert
             Assert.AreEqual(expectedTip, actualResult);
         }
 
