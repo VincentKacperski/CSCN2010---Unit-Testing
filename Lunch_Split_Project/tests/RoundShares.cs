@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Shares.Tests
 {
     [TestClass]
-    public class BillTest
+    public class ShareTest
     {
         [TestMethod] //M2-06
         public void ComputeTip_NegativeFixedTip_ThrowsException()
@@ -25,7 +25,7 @@ namespace Shares.Tests
             //Assert            
         }
 
-        [TestMethod] //M3-08
+        [TestMethod] //M2-08
         public void RoundShares_BankersRounding_RoundsToNearestEven() 
         {
             //Arrange
@@ -35,7 +35,7 @@ namespace Shares.Tests
             //Assert  
         }
 
-        [TestMethod] //M4-09
+        [TestMethod] //M2-09
         public void RoundShares_RoundUp_AppliesCeilingToCents()
         {
             //Arrange
@@ -45,7 +45,7 @@ namespace Shares.Tests
             //Assert  
         }
 
-        [TestMethod] //M5-10
+        [TestMethod] //M2-10
         public void RoundShares_UnevenSplit_ReconcilesRemainder()
         {
             //Arrange
@@ -55,7 +55,7 @@ namespace Shares.Tests
             //Assert
         }
         
-        [TestMethod] //M5-11
+        [TestMethod] //M2-11
         public void RoundShares_EmptyShareCollection_ReturnsEmpty()
         {
             //Arrange
