@@ -16,7 +16,7 @@ namespace Validate.Tests
         //Assert  
       }
 
-      [TestMethod] 
+      [TestMethod] //M3-13
       public void Validate_EmptyAttendeeCollection_ReturnsFail()
       {
         //Arrange
@@ -26,7 +26,7 @@ namespace Validate.Tests
         //Assert
       }
 
-      [TestMethod] 
+      [TestMethod] //M3-14
       public void Validate_NegativeSubtotal_ReturnsFail()
       {
         //Arrange
@@ -36,7 +36,7 @@ namespace Validate.Tests
         //Assert
       }
 
-      [TestMethod] 
+      [TestMethod] //M3-15
       public void Validate_NegativeTax_ReturnsFail()
       {
         //Arrange
@@ -46,7 +46,7 @@ namespace Validate.Tests
         //Assert
       }
 
-      [TestMethod] 
+      [TestMethod] //M3-16
       public void Validate_ZeroAttendees_ReturnsFail()
       {
         //Arrange
