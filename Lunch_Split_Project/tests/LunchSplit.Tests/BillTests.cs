@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Bill.Tests
+namespace BillTests
 {
     [TestClass]
     public class BillTest

@@ -3,8 +3,3 @@ public enum TipMode {
     percent,
     fixed_tip
 }
-
-class Bill
-{
-    
-}

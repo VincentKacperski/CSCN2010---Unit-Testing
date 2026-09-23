@@ -1,12 +1,12 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Calculate.Tests
+namespace CalculateTests
 {
     [TestClass]
     public class CalculateTest
     {
       
-      [TestMethod] //M3-17
+      [TestMethod] //M4-17
       public void CalculateShares_EqualSplit_ApportionsEvenly()
       {
         //Arrange
@@ -16,7 +16,7 @@ namespace Calculate.Tests
         //Assert  
       }
 
-      [TestMethod] //M3-18
+      [TestMethod] //M4-18
       public void CalculateShares_ProportionalSplit_ApportionsWeighted()
       {
         //Arrange
@@ -26,7 +26,7 @@ namespace Calculate.Tests
         //Assert
       }
 
-      [TestMethod] //M3-19
+      [TestMethod] //M4-19
       public void CalculateShares_ExcludedAttendee_ApportionsZero()
       {
         //Arrange
@@ -36,7 +36,7 @@ namespace Calculate.Tests
         //Assert
       }
 
-      [TestMethod] //M3-20
+      [TestMethod] //M4-20
       public void CalculateShares_TaxAndPercentTip_ApportionsTotal()
       {
         //Arrange
@@ -46,7 +46,7 @@ namespace Calculate.Tests
         //Assert
       }
 
-      [TestMethod] //M3-21
+      [TestMethod] //M4-21
       public void CalculateShares_TaxAndFixedTip_ApportionsTotal()
       {
         //Arrange
@@ -56,7 +56,7 @@ namespace Calculate.Tests
         //Assert
       }
 
-      [TestMethod] //M3-22
+      [TestMethod] //M4-22
       public void CalculateShares_AllAttendeesExcluded_ThrowsException()
       {
         //Arrange
@@ -66,7 +66,7 @@ namespace Calculate.Tests
         //Assert
       }
 
-      [TestMethod] //M3-23
+      [TestMethod] //M4-23
       public void CalculateShares_TotalWeightsZero_ThrowsException()
       {
         //Arrange

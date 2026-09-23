@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Validate.Tests
+namespace ValidateTests
 {
     [TestClass]
     public class ValidateTest

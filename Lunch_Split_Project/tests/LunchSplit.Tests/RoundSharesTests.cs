@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Shares.Tests
+namespace SharesTests
 {
     [TestClass]
     public class ShareTest

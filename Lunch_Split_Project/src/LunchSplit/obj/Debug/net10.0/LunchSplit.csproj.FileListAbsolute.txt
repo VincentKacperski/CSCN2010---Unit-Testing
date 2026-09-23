@@ -1,0 +1,15 @@
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\bin\Debug\net10.0\LunchSplit.exe
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\bin\Debug\net10.0\LunchSplit.deps.json
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\bin\Debug\net10.0\LunchSplit.runtimeconfig.json
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\bin\Debug\net10.0\LunchSplit.dll
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\bin\Debug\net10.0\LunchSplit.pdb
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\obj\Debug\net10.0\LunchSplit.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\obj\Debug\net10.0\LunchSplit.AssemblyInfoInputs.cache
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\obj\Debug\net10.0\LunchSplit.AssemblyInfo.cs
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\obj\Debug\net10.0\LunchSplit.csproj.CoreCompileInputs.cache
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\obj\Debug\net10.0\LunchSplit.sourcelink.json
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\obj\Debug\net10.0\LunchSplit.dll
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\obj\Debug\net10.0\refint\LunchSplit.dll
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\obj\Debug\net10.0\LunchSplit.pdb
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\obj\Debug\net10.0\LunchSplit.genruntimeconfig.cache
+c:\Users\Vincent\Desktop\Second Semester Course Assignments\CSCN72010 - Software Quality I\Lunch_Split_Project\Lunch_Split_Project\src\LunchSplit\obj\Debug\net10.0\ref\LunchSplit.dll
