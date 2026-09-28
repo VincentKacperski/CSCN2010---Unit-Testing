@@ -1,32 +1,33 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
-namespace SharesTests
+namespace RoundShare
 {
     [TestClass]
-    public class ShareTest
+    public class RoundShare
     {
         [TestMethod] //M2-06
-        public void ComputeTip_NegativeFixedTip_ThrowsException()
-        {
-            //Arrange
-
-            //Act
-
-            //Assert
-        }
-
-        [TestMethod] //M2-07
         public void RoundShares_NoRounding_PreservesRawDecimals()
         {
             //Arrange
 
             //Act
 
-            //Assert            
+            //Assert  
+        }
+
+        [TestMethod] //M2-07
+        public void RoundShares_BankersRounding_RoundsToNearestEven()
+        {
+            //Arrange
+
+            //Act
+
+            //Assert  
         }
 
         [TestMethod] //M2-08
-        public void RoundShares_BankersRounding_RoundsToNearestEven() 
+        public void RoundShares_RoundUp_AppliesCeilingToCents() 
         {
             //Arrange
 
@@ -36,7 +37,7 @@ namespace SharesTests
         }
 
         [TestMethod] //M2-09
-        public void RoundShares_RoundUp_AppliesCeilingToCents()
+        public void RoundShares_RoundDown_AppliesFloorToCents()
         {
             //Arrange
 
@@ -52,7 +53,7 @@ namespace SharesTests
 
             //Act
 
-            //Assert
+            //Assert  
         }
         
         [TestMethod] //M2-11
@@ -62,8 +63,8 @@ namespace SharesTests
 
             //Act
 
-            //Assert
+            //Assert  
         }
-
+        
     }
 }

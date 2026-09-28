@@ -1,3 +1,4 @@
+using Microsoft.VisualStudio.TestPlatform.Common.DataCollection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CalculateTests

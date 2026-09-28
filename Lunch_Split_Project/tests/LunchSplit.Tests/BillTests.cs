@@ -9,20 +9,40 @@ namespace BillTests
         public void ComputeTip_NoTipMode_ReturnsZero()
         {
             //Arrange
+            decimal billTotal= 0;
+            decimal tip_input = 0;
+            decimal expectedTip = 0;
+            TipMode tm;
+            Bill bill = new Bill(95, 5, 0, TipMode.none); //Create a new bill object
 
             //Act
+            billTotal = bill.getSubTotal() + bill.getTax();
+            tip_input = bill.getTip();
+            tm = bill.getTipMode();
+            decimal actualResult = bill.calculateTip(billTotal, tm, tip_input);
 
-            //Assert  
+            //Assert
+            Assert.AreEqual(expectedTip, actualResult);
         }
 
         [TestMethod] //M1-02
         public void ComputeTip_PercentTipMode_ReturnsCorrectPercent()
         {
             //Arrange
+            decimal billTotal = 0;
+            decimal tip_input = 0;
+            decimal expectedTip = 18;
+            TipMode tm;
+            Bill bill = new Bill(110, 10, 0.15m, TipMode.percent); //Create a new bill object
 
             //Act
+            billTotal = bill.getSubTotal() + bill.getTax();
+            tip_input = bill.getTip();
+            tm = bill.getTipMode();
+            decimal actualResult = bill.calculateTip(billTotal, tm, tip_input);
 
-            //Assert  
+            //Assert
+            Assert.AreEqual(expectedTip, actualResult);
         }
 
         [TestMethod] //M1-03
@@ -32,7 +52,7 @@ namespace BillTests
 
             //Act
 
-            //Assert  
+            //Assert
         }
 
         [TestMethod] //M1-04
@@ -42,7 +62,7 @@ namespace BillTests
 
             //Act
 
-            //Assert  
+            //Assert
         }
 
         [TestMethod] //M1-05
@@ -52,7 +72,7 @@ namespace BillTests
 
             //Act
 
-            //Assert  
+            //Assert
         }
     }
 } 
