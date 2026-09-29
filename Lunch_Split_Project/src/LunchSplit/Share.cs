@@ -47,10 +47,28 @@ public class Share
                 //Do Nothing
                 break;
             case RoundMode.up: //percentage tip
-                
+                for (int i = 0; i < rawShares.Count(); i++)
+                {
+                    total += rawShares[i].amount;
+                    origNum = rawShares[i].amount;
+                    roundedNumber = Math.Ceiling(rawShares[i].amount * 100) / 100;
+                    rawShares[i].amount = roundedNumber;
+                    roundedTotal += roundedNumber;
+                    diffrence += roundedNumber - origNum;
+                }
+                rawShares[rawShares.Count()-1].amount -= roundedTotal - total;
                 break;
             case RoundMode.down: //percentage tip
-                 
+                for (int i = 0; i < rawShares.Count(); i++)
+                {
+                    total += rawShares[i].amount;
+                    origNum = rawShares[i].amount;
+                    roundedNumber = Math.Floor(rawShares[i].amount * 100) / 100;
+                    rawShares[i].amount = roundedNumber;
+                    roundedTotal += roundedNumber;
+                    diffrence += origNum - roundedNumber;
+                }
+                rawShares[rawShares.Count()-1].amount += diffrence;
                 break;
             case RoundMode.bankers:
                 for (int i = 0; i < rawShares.Count(); i++)
