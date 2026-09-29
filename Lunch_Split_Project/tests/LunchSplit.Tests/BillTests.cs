@@ -87,10 +87,20 @@ namespace BillTests
         public void ComputeTip_NegativeFixedTip_ThrowsException()
         {
             //Arrange
+            decimal billTotal = 0;
+            decimal tip_input = 10;
+            decimal expectedTip = 12;
+            TipMode tm;
+            Bill bill = new Bill(70, 10, 0.15m, TipMode.percent); //Create a new bill object
 
             //Act
+            billTotal = bill.getSubTotal() + bill.getTax();
+            tip_input = bill.getTip();
+            tm = bill.getTipMode();
+            decimal actualResult = bill.calculateTip(billTotal, tm, tip_input);
 
             //Assert
+            Assert.AreEqual(expectedTip, actualResult);
         }
     }
 } 
