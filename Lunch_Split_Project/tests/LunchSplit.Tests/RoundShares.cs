@@ -106,21 +106,39 @@ namespace RoundShare
         public void RoundShares_UnevenSplit_ReconcilesRemainder()
         {
             //Arrange
+            List<Share> expectedShares = new List<Share>();
+            List<Share> rawShares = new List<Share>();
+            Share share1 = new Share("Vincent", 76.533m);
+            Share share2 = new Share("Jacob", 21.843m);
+            Share share3 = new Share("Mike", 56.867m);
+            rawShares.Add(share1);
+            rawShares.Add(share2);
+            rawShares.Add(share3);
+            expectedShares.Add(share1);
+            expectedShares.Add(share2);
+            expectedShares.Add(share3);
+            Share blankShare = new Share();
 
             //Act
+            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundMode.down);
 
-            //Assert  
+            //Assert
+            CollectionAssert.AreEqual(expectedShares, actualShares);
         }
         
         [TestMethod] //M2-11
         public void RoundShares_EmptyShareCollection_ReturnsEmpty()
         {
             //Arrange
+            List<Share> expectedShares = new List<Share>();
+            List<Share> rawShares = new List<Share>();
+            Share blankShare = new Share();
 
             //Act
+            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundMode.down);
 
-            //Assert  
-        }
-        
+            //Assert
+            CollectionAssert.AreEqual(expectedShares, actualShares);
+        }       
     }
 }
