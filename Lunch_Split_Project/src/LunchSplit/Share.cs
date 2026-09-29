@@ -29,11 +29,11 @@ public class Share
     {
 
         //Decleration
-        /*decimal total = 0m;
+        decimal total = 0m;
         decimal roundedTotal = 0;
         decimal roundedNumber = 0m;
         decimal origNum = 0m;
-        decimal diffrence = 0;*/
+        decimal diffrence = 0;
 
         if (rawShares.Count == 0) //Check if the array is empty
         {
@@ -53,7 +53,14 @@ public class Share
                  
                 break;
             case RoundMode.bankers:
-                
+                for (int i = 0; i < rawShares.Count(); i++)
+                {
+                total += rawShares[i].amount;
+                roundedNumber = Math.Round(rawShares[i].amount, 2);
+                rawShares[i].amount = roundedNumber;
+                roundedTotal += roundedNumber;
+                }
+                rawShares[rawShares.Count()-1].amount += total - roundedTotal;
                 break;
             default:
                 //Nothing to do here

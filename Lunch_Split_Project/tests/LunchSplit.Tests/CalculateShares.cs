@@ -10,21 +10,21 @@ namespace CalculateTests
       [TestMethod] //M4-17
       public void CalculateShares_EqualSplit_ApportionsEvenly()
       {
-        //Arrange
+          //Arrange
 
-        //Act
+          //Act
 
-        //Assert  
+          //Assert
       }
 
       [TestMethod] //M4-18
       public void CalculateShares_ProportionalSplit_ApportionsWeighted()
       {
-        //Arrange
+          //Arrange
 
-        //Act
+          //Act
 
-        //Assert
+          //Assert
       }
 
       [TestMethod] //M4-19
