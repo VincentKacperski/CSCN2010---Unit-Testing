@@ -73,7 +73,7 @@ public class Bill
         }
 
         //Validate Bill
-        if (bill.getSubTotal() < 0 && bill.getTax() < 0 && bill.getTip() < 0)
+        if (bill.getSubTotal() < 0 || bill.getTax() < 0 || bill.getTip() < 0)
         {
             return -1; //invalidate the bill with attendees
         }
