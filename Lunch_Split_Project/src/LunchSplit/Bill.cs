@@ -20,8 +20,8 @@ public class Bill
 
     //Setters and Getters=--------------------------------------------------=
     public void setSubTotal(decimal sub_total) {this.subTotal = sub_total;} //Set the total
-    public void setTax(decimal tip_input) {this.tip_input = tip_input;} //Set the tip amount for fixed tip
-    public void setTip(decimal tax) {this.tax = tax;} //Set the tip amount for fixed tip
+    public void setTax(decimal tax) {this.tax = tax;} //Set the tip amount for fixed tip
+    public void setTip(decimal tip_input) {this.tip_input = tip_input;} //Set the tip amount for fixed tip
     public void setTipMode(TipMode tip_mode) {this.tip_mode = tip_mode;} //Set the tip amount for fixed tip
 
     //=---------------------------------------------------------------------=
@@ -62,4 +62,36 @@ public class Bill
             throw new ArgumentOutOfRangeException();   
         }
     }
+
+    public decimal Validate(Bill bill, List<Attendee> attendees)
+    {
+        //validate Bill First
+        if (bill.getSubTotal() < 0)
+        {
+            return -1; //invalidate the bill with attendees
+        } else if (bill.getTax() < 0)
+        {
+            return -1; //invalidate the bill with attendees
+        } else if (bill.getTip() < 0)
+        {
+            return -1; //Invalidate the bill with attendees
+        }
+
+        //Validate Attendee
+        for (int i = 0; i < attendees.Count(); i++)
+        {
+            if (attendees[i].getName() == "")
+            {
+                return -1; //Invalidate the attendee list
+            } else if (attendees[i].getWeight() <= 0)
+            {
+                return -1; //Invalidate the attendee list
+            } else if (attendees[i].getShare() <= 0)
+            {
+                return -1; //Invalidate the attendee list
+            }
+        }
+        return 0;
+    }
+
 }
