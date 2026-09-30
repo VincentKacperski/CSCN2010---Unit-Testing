@@ -63,34 +63,21 @@ public class Bill
         }
     }
 
-    public decimal Validate(Bill bill, List<Attendee> attendees)
+    public int Validate(Bill bill, List<Attendee> attendees)
     {
-        //validate Bill First
-        if (bill.getSubTotal() < 0)
-        {
-            return -1; //invalidate the bill with attendees
-        } else if (bill.getTax() < 0)
-        {
-            return -1; //invalidate the bill with attendees
-        } else if (bill.getTip() < 0)
-        {
-            return -1; //Invalidate the bill with attendees
-        }
 
         //Validate Attendee
-        for (int i = 0; i < attendees.Count(); i++)
+        if (attendees.Count() == 0)
         {
-            if (attendees[i].getName() == "")
-            {
-                return -1; //Invalidate the attendee list
-            } else if (attendees[i].getWeight() <= 0)
-            {
-                return -1; //Invalidate the attendee list
-            } else if (attendees[i].getShare() <= 0)
-            {
-                return -1; //Invalidate the attendee list
-            }
+            return -1;
         }
+
+        //Validate Bill
+        if (bill.getSubTotal() < 0 && bill.getTax() < 0 && bill.getTip() < 0)
+        {
+            return -1; //invalidate the bill with attendees
+        }
+
         return 0;
     }
 
