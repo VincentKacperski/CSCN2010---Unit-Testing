@@ -3,10 +3,10 @@ using System.Reflection.Metadata.Ecma335;
 public class Attendee {
 
     //Decleration
-    String name = "";
-    int weight = 0; //for unequal cost shares
-    double share = 2;
-    bool included = true; //active in a split
+    private String name = "";
+    public int weight = 0; //for unequal cost shares
+    private double share = 2;
+    private bool included = true; //active in a split
 
     //Constructor to build an attendee object =-------------------------------------=
     public Attendee(String name, int weight, double share, bool included)

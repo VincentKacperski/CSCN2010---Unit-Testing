@@ -25,7 +25,7 @@ public class Share
     public decimal getAmount() {return amount;} //Get the amount
 
     //Important Functions=------------------------------------------------------= 
-    public List<Share> RoundShares(List<Share> rawShares, RoundMode mode)
+    public List<Share> RoundShares(List<Share> rawShares, RoundingMode mode)
     {
 
         //Decleration
@@ -43,10 +43,10 @@ public class Share
         //Determine a rounding mode
         switch (mode)
         {
-            case RoundMode.none: //no tip
+            case RoundingMode.none: //no tip
                 //Do Nothing
                 break;
-            case RoundMode.up: //percentage tip
+            case RoundingMode.up: //percentage tip
                 for (int i = 0; i < rawShares.Count(); i++)
                 {
                     total += rawShares[i].amount;
@@ -58,7 +58,7 @@ public class Share
                 }
                 rawShares[rawShares.Count()-1].amount -= roundedTotal - total;
                 break;
-            case RoundMode.down: //percentage tip
+            case RoundingMode.down: //percentage tip
                 for (int i = 0; i < rawShares.Count(); i++)
                 {
                     total += rawShares[i].amount;
@@ -70,7 +70,7 @@ public class Share
                 }
                 rawShares[rawShares.Count()-1].amount += diffrence;
                 break;
-            case RoundMode.bankers:
+            case RoundingMode.bankers:
                 for (int i = 0; i < rawShares.Count(); i++)
                 {
                 total += rawShares[i].amount;
@@ -86,5 +86,83 @@ public class Share
         }
 
         return rawShares;
+    }
+
+    public List<Share> CalculateShares(Bill bill, List<Attendee> attendees, RoundingMode roundingMode)
+    {
+        //Decleration
+        List<Share> calculatedShares = new List<Share>();
+        decimal billTotal;
+        decimal billShare;
+        decimal roundedSum = 0;
+        int attendeeCount;
+
+        //Calculations
+        billTotal = bill.getSubTotal() + bill.getTax() + bill.getTip();
+        attendeeCount = attendees.Count();
+        billShare = billTotal / attendeeCount;
+        attendees.OrderByDescending(attendees => attendees.weight); //Sort the list from greatest to least ex. [8, 3, 2, 1]
+
+        //Remove attendees who do not want to split the bill
+        for (int i=0; i<attendees.Count(); i++)
+        {
+            //Check if the attendee agrees to split the bill
+            if (attendees[i].getIncluded() == false)
+            {
+                attendeeCount -= 1; //if not subtract 1
+                attendees.Remove(attendees[i]);
+            }
+        }
+
+        //Sort the new array of attendees who are willing to share from greatest to least ex. [8, 3, 2, 1];
+        attendees.OrderByDescending(attendees => attendees.weight);
+
+        for (int j=0; j<attendeeCount; j++)
+        {
+            calculatedShares[j].amount = billShare * (decimal)attendees[j].getShare(); //Calculate their share.
+            calculatedShares[j].name = attendees[j].getName(); //Track the attendees name with their share
+        }
+
+        //Determine a rounding mode
+        switch (roundingMode)
+        {
+            case RoundingMode.none: //no tip
+                //Do Nothing
+                break;
+            case RoundingMode.up: //round up in favour of the buissness
+                for (int i = 0; i < calculatedShares.Count(); i++)
+                {
+                    decimal originalNum = calculatedShares[i].amount;
+                    roundedSum += calculatedShares[i].amount; //Subtracted from the total to find the missing penny
+                    decimal roundedNumber = Math.Ceiling(calculatedShares[i].amount * 100) / 100;
+                    calculatedShares[i].amount = roundedNumber;
+                }
+                calculatedShares[calculatedShares.Count()-1].amount = roundedSum - billTotal;  
+                break;
+            case RoundingMode.down: //round down in favor of the customer
+                for (int i = 0; i < calculatedShares.Count(); i++)
+                {
+                    decimal originalNum = calculatedShares[i].amount;
+                    roundedSum += calculatedShares[i].amount;//Subtracted from the total to find the missing penny
+                    decimal roundedNumber = Math.Floor(calculatedShares[i].amount * 100) / 100;
+                    calculatedShares[i].amount = roundedNumber;
+                }
+                calculatedShares[calculatedShares.Count()-1].amount += billTotal - roundedSum; 
+                break;
+            case RoundingMode.bankers: //round in bankers mode to the nearest even
+                for (int i = 0; i < calculatedShares.Count(); i++)
+                {
+                    decimal originalNum = calculatedShares[i].amount;
+                    roundedSum += calculatedShares[i].amount;//Subtracted from the total to find the missing penny
+                    decimal roundedNumber = Math.Round(calculatedShares[i].amount, 2);
+                    calculatedShares[i].amount = roundedNumber;
+                }
+                calculatedShares[calculatedShares.Count()-1].amount += billTotal - roundedSum; 
+                break;
+            default:
+                //Do nothing
+                break;
+        }
+        return calculatedShares;
     }
 }

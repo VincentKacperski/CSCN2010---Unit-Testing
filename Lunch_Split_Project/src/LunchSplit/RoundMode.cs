@@ -1,4 +1,4 @@
-public enum RoundMode {
+public enum RoundingMode {
     none,
     down,
     up,
