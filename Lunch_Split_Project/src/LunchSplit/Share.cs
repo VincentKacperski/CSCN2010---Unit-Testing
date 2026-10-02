@@ -98,20 +98,45 @@ public class Share
         decimal roundedSum = 0;
         int sumWeights = 0;
         int attendeeCount;
-
+        int excludedAttendeeCount = 0; //Counts the number of attendees not included
+        int zeroWeightsCount = 0; //Counts the number attendes that have no weights
         //Calculations
         subTotal = bill.getSubTotal(); //Get the subTotal for share calculations
         attendeeCount = attendees.Count(); //Get the total number of attendees
 
+        for (int i = 0; i< attendees.Count(); i++) //Error checking loop
+        {
+            switch(attendees[i].getIncluded())
+            {
+                case true:
+                    //No error
+                    if (attendees[i].weight == 0)
+                    {
+                       zeroWeightsCount += 1;   
+                    }
+                    break;
+                case false:
+                    excludedAttendeeCount += 1;   
+                    break;
+                default:
+                    //Do nothing
+            }       
+
+            //Throw an exception if all weights are zero or all attendees are excluded
+            if (excludedAttendeeCount == attendees.Count() || zeroWeightsCount == attendees.Count())
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
         //Exclude employees 
         for (int i = 0; i < attendeeCount; i++) //Loop through the attendee list
         {
-            Console.WriteLine("Entering here.");
             if (attendees[i].getIncluded() == true) //Check if the attendee is included
             {          
                 sumWeights += attendees[i].weight; //Sum the weights to divide the bill by
             } else {
-                sumWeights += 0; //Don't add to the total weight if the attendee is excluded         
+                sumWeights += 0; //Don't add to the total weight if the attendee is excluded        
             }          
         }
         billShare = subTotal / sumWeights; //Divide the bill based on weights
@@ -126,6 +151,7 @@ public class Share
                     name = attendees[i].getName(),
                     amount = billShare * (decimal)attendees[i].getWeight(),
                 });
+
             } else
             {
                 calculatedShares.Add(new Share () //Add a 0 share amount for the excluded attendee
@@ -133,6 +159,7 @@ public class Share
                     name = attendees[i].getName(),
                     amount = 0,
                 });
+                
             }        
         } //Sort the list from least to greatest so we can add the penny to the largest share
         calculatedShares = calculatedShares.OrderBy(calculatedShares => calculatedShares.amount).ToList();
@@ -154,24 +181,24 @@ public class Share
                 calculatedShares[calculatedShares.Count()-1].amount -= roundedSum - subTotal;
                 break;
             case RoundingMode.down: //round down in favor of the customer
-                /*for (int i = 0; i < calculatedShares.Count(); i++)
+                for (int i = 0; i < calculatedShares.Count(); i++)
                 {
                     decimal originalNum = calculatedShares[i].amount;
-                    roundedSum += calculatedShares[i].amount;//Subtracted from the total to find the missing penny
                     decimal roundedNumber = Math.Floor(calculatedShares[i].amount * 100) / 100;
                     calculatedShares[i].amount = roundedNumber;
+                    roundedSum += calculatedShares[i].amount; //Subtracted from the total to find the missing penny
                 }
-                calculatedShares[calculatedShares.Count()-1].amount += subTotal - roundedSum; */
+                calculatedShares[calculatedShares.Count()-1].amount += roundedSum - subTotal;
                 break;
             case RoundingMode.bankers: //round in bankers mode to the nearest even
-                /*for (int i = 0; i < calculatedShares.Count(); i++)
+                for (int i = 0; i < calculatedShares.Count(); i++)
                 {
                     decimal originalNum = calculatedShares[i].amount;
-                    roundedSum += calculatedShares[i].amount;//Subtracted from the total to find the missing penny
                     decimal roundedNumber = Math.Round(calculatedShares[i].amount, 2);
                     calculatedShares[i].amount = roundedNumber;
+                    roundedSum += calculatedShares[i].amount; //Subtracted from the total to find the missing penny
                 }
-                calculatedShares[calculatedShares.Count()-1].amount += billTotal - roundedSum; */
+                calculatedShares[calculatedShares.Count()-1].amount += roundedSum - subTotal;
                 break;
             default:
                 //Do nothing

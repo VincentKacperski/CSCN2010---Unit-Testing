@@ -45,11 +45,12 @@ public class Bill
                 case TipMode.none: //no tip
                     calculated_tip = tip_input;
                     break;
-                case TipMode.fixed_tip:  //fixed tip
+                case TipMode.fixed_tip: //fixed tip
                     calculated_tip = billTotal + tip_input - billTotal;
                     break;
                 case TipMode.percent: //percentage tip
                     calculated_tip = billTotal * tip_input;
+                    Console.WriteLine(calculated_tip);
                     break;
                 default:
                     //Nothing to do here

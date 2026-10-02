@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LunchSplit")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+889a6de5f27a66556797f647997acab1f3299126")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dfdedc8b48218a7481049c424d6e12d80bf76a9d")]
 [assembly: System.Reflection.AssemblyProductAttribute("LunchSplit")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LunchSplit")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
