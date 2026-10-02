@@ -2,6 +2,7 @@ using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using System.ComponentModel;
 
 public class Share
 {
@@ -91,37 +92,50 @@ public class Share
     public List<Share> CalculateShares(Bill bill, List<Attendee> attendees, RoundingMode roundingMode)
     {
         //Decleration
-        List<Share> calculatedShares = new List<Share>();
-        decimal billTotal;
+        List<Share> calculatedShares = new List<Share>(); //List to hold newly calculated shares
+        decimal subTotal;
         decimal billShare;
         decimal roundedSum = 0;
+        int sumWeights = 0;
         int attendeeCount;
 
         //Calculations
-        billTotal = bill.getSubTotal() + bill.getTax() + bill.getTip();
-        attendeeCount = attendees.Count();
-        billShare = billTotal / attendeeCount;
-        attendees.OrderByDescending(attendees => attendees.weight); //Sort the list from greatest to least ex. [8, 3, 2, 1]
+        subTotal = bill.getSubTotal(); //Get the subTotal for share calculations
+        attendeeCount = attendees.Count(); //Get the total number of attendees
 
-        //Remove attendees who do not want to split the bill
-        for (int i=0; i<attendees.Count(); i++)
+        //Exclude employees 
+        for (int i = 0; i < attendeeCount; i++) //Loop through the attendee list
         {
-            //Check if the attendee agrees to split the bill
-            if (attendees[i].getIncluded() == false)
+            Console.WriteLine("Entering here.");
+            if (attendees[i].getIncluded() == true) //Check if the attendee is included
+            {          
+                sumWeights += attendees[i].weight; //Sum the weights to divide the bill by
+            } else {
+                sumWeights += 0; //Don't add to the total weight if the attendee is excluded         
+            }          
+        }
+        billShare = subTotal / sumWeights; //Divide the bill based on weights
+
+        //Calculate shares for each attendee based on weight
+        for (int i = 0; i < attendees.Count(); i++)
+        {
+            if (attendees[i].getIncluded() == true) //Check if the attendee is included in the share
             {
-                attendeeCount -= 1; //if not subtract 1
-                attendees.Remove(attendees[i]);
-            }
-        }
-
-        //Sort the new array of attendees who are willing to share from greatest to least ex. [8, 3, 2, 1];
-        attendees.OrderByDescending(attendees => attendees.weight);
-
-        for (int j=0; j<attendeeCount; j++)
-        {
-            calculatedShares[j].amount = billShare * (decimal)attendees[j].getShare(); //Calculate their share.
-            calculatedShares[j].name = attendees[j].getName(); //Track the attendees name with their share
-        }
+                calculatedShares.Add(new Share () //Create a new share based on the attendee
+                {
+                    name = attendees[i].getName(),
+                    amount = billShare * (decimal)attendees[i].getWeight(),
+                });
+            } else
+            {
+                calculatedShares.Add(new Share () //Add a 0 share amount for the excluded attendee
+                {
+                    name = attendees[i].getName(),
+                    amount = 0,
+                });
+            }        
+        } //Sort the list from least to greatest so we can add the penny to the largest share
+        calculatedShares = calculatedShares.OrderBy(calculatedShares => calculatedShares.amount).ToList();
 
         //Determine a rounding mode
         switch (roundingMode)
@@ -133,31 +147,31 @@ public class Share
                 for (int i = 0; i < calculatedShares.Count(); i++)
                 {
                     decimal originalNum = calculatedShares[i].amount;
-                    roundedSum += calculatedShares[i].amount; //Subtracted from the total to find the missing penny
                     decimal roundedNumber = Math.Ceiling(calculatedShares[i].amount * 100) / 100;
                     calculatedShares[i].amount = roundedNumber;
+                    roundedSum += calculatedShares[i].amount; //Subtracted from the total to find the missing penny
                 }
-                calculatedShares[calculatedShares.Count()-1].amount = roundedSum - billTotal;  
+                calculatedShares[calculatedShares.Count()-1].amount -= roundedSum - subTotal;
                 break;
             case RoundingMode.down: //round down in favor of the customer
-                for (int i = 0; i < calculatedShares.Count(); i++)
+                /*for (int i = 0; i < calculatedShares.Count(); i++)
                 {
                     decimal originalNum = calculatedShares[i].amount;
                     roundedSum += calculatedShares[i].amount;//Subtracted from the total to find the missing penny
                     decimal roundedNumber = Math.Floor(calculatedShares[i].amount * 100) / 100;
                     calculatedShares[i].amount = roundedNumber;
                 }
-                calculatedShares[calculatedShares.Count()-1].amount += billTotal - roundedSum; 
+                calculatedShares[calculatedShares.Count()-1].amount += subTotal - roundedSum; */
                 break;
             case RoundingMode.bankers: //round in bankers mode to the nearest even
-                for (int i = 0; i < calculatedShares.Count(); i++)
+                /*for (int i = 0; i < calculatedShares.Count(); i++)
                 {
                     decimal originalNum = calculatedShares[i].amount;
                     roundedSum += calculatedShares[i].amount;//Subtracted from the total to find the missing penny
                     decimal roundedNumber = Math.Round(calculatedShares[i].amount, 2);
                     calculatedShares[i].amount = roundedNumber;
                 }
-                calculatedShares[calculatedShares.Count()-1].amount += billTotal - roundedSum; 
+                calculatedShares[calculatedShares.Count()-1].amount += billTotal - roundedSum; */
                 break;
             default:
                 //Do nothing

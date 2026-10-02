@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
-namespace RoundShare
+namespace Rounder.RoundShares
 {
     [TestClass]
     public class RoundShare
@@ -21,7 +21,7 @@ namespace RoundShare
             Share blankShare = new Share();
 
             //Act
-            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundMode.none);
+            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundingMode.none);
 
             //Assert
             CollectionAssert.AreEqual(expectedShares, actualShares);  
@@ -45,7 +45,7 @@ namespace RoundShare
             Share blankShare = new Share();
 
             //Act
-            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundMode.bankers);
+            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundingMode.bankers);
             expectedShares[2].setAmount(33.339m);
 
             //Assert
@@ -70,7 +70,7 @@ namespace RoundShare
             Share blankShare = new Share();
 
             //Act
-            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundMode.up);
+            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundingMode.up);
             expectedShares[2].setAmount(33.319m);
 
             //Assert
@@ -95,7 +95,7 @@ namespace RoundShare
             Share blankShare = new Share();
 
             //Act
-            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundMode.down);
+            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundingMode.down);
             expectedShares[2].setAmount(33.339m);
 
             //Assert
@@ -120,7 +120,7 @@ namespace RoundShare
             Share blankShare = new Share();
 
             //Act
-            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundMode.down);
+            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundingMode.down);
 
             //Assert
             CollectionAssert.AreEqual(expectedShares, actualShares);
@@ -135,7 +135,7 @@ namespace RoundShare
             Share blankShare = new Share();
 
             //Act
-            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundMode.down);
+            List<Share> actualShares = blankShare.RoundShares(rawShares, RoundingMode.down);
 
             //Assert
             CollectionAssert.AreEqual(expectedShares, actualShares);
