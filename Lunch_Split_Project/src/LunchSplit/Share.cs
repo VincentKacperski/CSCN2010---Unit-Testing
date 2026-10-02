@@ -121,7 +121,7 @@ public class Share
         {
             if (attendees[i].getIncluded() == true) //Check if the attendee is included in the share
             {
-                calculatedShares.Add(new Share () //Create a new share based on the attendee
+                calculatedShares.Add(new Share () //Create a new share object based on the attendee
                 {
                     name = attendees[i].getName(),
                     amount = billShare * (decimal)attendees[i].getWeight(),
