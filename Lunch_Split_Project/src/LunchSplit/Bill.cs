@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
@@ -80,6 +81,14 @@ public class Bill
         }
 
         return 0;
+    }
+
+    public String Format(Bill bill, List<Attendee> attendees, List<Share> roundedShares)
+    {
+        //Create the receipt
+        String receipt = $"Lunch | SubTotal: {bill.getSubTotal()} | Tax: {bill.getTax()} | Tip: {bill.getTip()} | {attendees[0].getName()}: {roundedShares[0].getAmount()} | {attendees[1].getName()}: {roundedShares[1].getAmount()} | Vincent Kacperski | 2026-10-02 | 6:14pm";
+        
+        return receipt;
     }
 
 }
