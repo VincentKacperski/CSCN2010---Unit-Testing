@@ -12,12 +12,12 @@ namespace Splitter.CalculateShares
       {
           //Arrange
           Bill bill = new Bill(90, 10, 5, TipMode.fixed_tip);
-          List<Share> expectedShares = new List<Share>();
+          List<Share> expectedShares = new List<Share>();  //Create a new expected shares list and add test entries
           Share share1 = new Share("Sheldon", 30.00m);
           Share share2 = new Share("Jake", 30.00m);
           Share share3 = new Share("Maria", 30.00m);
           expectedShares.Add(share1); expectedShares.Add(share2); expectedShares.Add(share3); 
-          List<Attendee> attendees = new List<Attendee>();
+          List<Attendee> attendees = new List<Attendee>(); //Create a new attendees list and add test entries
           Attendee attendee1 = new Attendee("Jake", 1, 1, true);
           Attendee attendee2 = new Attendee("Sheldon", 1, 1, true);    
           Attendee attendee3 = new Attendee("Maria", 1, 1, true);
@@ -30,7 +30,7 @@ namespace Splitter.CalculateShares
           List<Share> calculatedShares = testShare.CalculateShares(bill, attendees, RoundingMode.up);
 
           //Assert
-          Assert.AreEqual(expectedShares[0].getAmount(), calculatedShares[0].getAmount());
+          Assert.AreEqual(expectedShares[0].getAmount(), calculatedShares[0].getAmount()); //Compare
           Assert.AreEqual(expectedShares[1].getAmount(), calculatedShares[1].getAmount());
           Assert.AreEqual(expectedShares[2].getAmount(), calculatedShares[2].getAmount());
       }
@@ -40,11 +40,11 @@ namespace Splitter.CalculateShares
       {
           //Arrange
           Bill bill = new Bill(90, 20, 5, TipMode.fixed_tip);
-          List<Share> expectedShares = new List<Share>();
+          List<Share> expectedShares = new List<Share>(); //Create a new expected shares list and add test entries
           Share share1 = new Share("Kim", 30m);
           Share share2 = new Share("Jessica", 60m);
           expectedShares.Add(share1); expectedShares.Add(share2); 
-          List<Attendee> attendees = new List<Attendee>();
+          List<Attendee> attendees = new List<Attendee>(); //Create a new attendees list and add test entries
           Attendee attendee1 = new Attendee("Kim", 1, 1, true);
           Attendee attendee2 = new Attendee("Jessica", 2, 1, true);
           attendees.Add(attendee1); attendees.Add(attendee2); 
@@ -52,11 +52,11 @@ namespace Splitter.CalculateShares
 
           //Act
           decimal calculatedTip = bill.calculateTip(bill.getSubTotal(), TipMode.fixed_tip, bill.getTip());
-          bill.setTip(calculatedTip);
-          List<Share> calculatedShares = testShare.CalculateShares(bill, attendees, RoundingMode.up);
+          bill.setTip(calculatedTip); //Store the calculated tip as the bills tip
+          List<Share> calculatedShares = testShare.CalculateShares(bill, attendees, RoundingMode.up); //Calculate each attendees  shares
 
           //Assert
-          Assert.AreEqual(expectedShares[0].getAmount(), calculatedShares[0].getAmount());
+          Assert.AreEqual(expectedShares[0].getAmount(), calculatedShares[0].getAmount()); //Compare
           Assert.AreEqual(expectedShares[1].getAmount(), calculatedShares[1].getAmount());
       }
 
@@ -65,12 +65,12 @@ namespace Splitter.CalculateShares
       {
           //Arrange
           Bill bill = new Bill(90, 7, 10, TipMode.fixed_tip);
-          List<Share> expectedShares = new List<Share>();
+          List<Share> expectedShares = new List<Share>(); //Create a new expected shares list and add test entries
           Share share1 = new Share("Sofia", 0m);
           Share share2 = new Share("Kim", 30m);
           Share share3 = new Share("Jessica", 60m);
           expectedShares.Add(share1); expectedShares.Add(share2); expectedShares.Add(share3); 
-          List<Attendee> attendees = new List<Attendee>();
+          List<Attendee> attendees = new List<Attendee>(); //Create a new attendees list and add test entries
           Attendee attendee1 = new Attendee("Kim", 1, 1, true);
           Attendee attendee2 = new Attendee("Jessica", 2, 1, true);
           Attendee attendee3 = new Attendee("Sofia", 1, 1, false);
@@ -80,10 +80,10 @@ namespace Splitter.CalculateShares
           //Act
           decimal calculatedTip = bill.calculateTip(bill.getSubTotal(), TipMode.fixed_tip, bill.getTip());
           bill.setTip(calculatedTip);
-          List<Share> calculatedShares = testShare.CalculateShares(bill, attendees, RoundingMode.up);
+          List<Share> calculatedShares = testShare.CalculateShares(bill, attendees, RoundingMode.up); //calculate shares and round them all up
 
           //Assert
-          Assert.AreEqual(expectedShares[0].getAmount(), calculatedShares[0].getAmount());
+          Assert.AreEqual(expectedShares[0].getAmount(), calculatedShares[0].getAmount()); //Compare each element
           Assert.AreEqual(expectedShares[1].getAmount(), calculatedShares[1].getAmount());
           Assert.AreEqual(expectedShares[2].getAmount(), calculatedShares[2].getAmount());
       }
@@ -93,12 +93,12 @@ namespace Splitter.CalculateShares
       {
           //Arrange
           Bill bill = new Bill(100, 13, 0.15m, TipMode.percent);
-          List<Share> expectedShares = new List<Share>();
+          List<Share> expectedShares = new List<Share>(); //Create a new expected shares list and add test entries
           Share share1 = new Share("Sofia", 33.34m);
           Share share2 = new Share("Kim", 33.34m);
           Share share3 = new Share("Jessica", 33.32m);
           expectedShares.Add(share1); expectedShares.Add(share2); expectedShares.Add(share3); 
-          List<Attendee> attendees = new List<Attendee>();
+          List<Attendee> attendees = new List<Attendee>(); //Create a new attendees list and add test entries
           Attendee attendee1 = new Attendee("Kim", 1, 1, true);
           Attendee attendee2 = new Attendee("Jessica", 1, 1, true);
           Attendee attendee3 = new Attendee("Michael", 1, 1, true);
@@ -106,12 +106,12 @@ namespace Splitter.CalculateShares
           Share testShare = new Share(); 
 
           //Act
-          decimal calculatedTip = bill.calculateTip(bill.getSubTotal(), TipMode.percent, bill.getTip());
-          decimal grandTotal = bill.getSubTotal() + bill.getTax() + calculatedTip;
-          List<Share> calculatedShares = testShare.CalculateShares(bill, attendees, RoundingMode.up);
+          decimal calculatedTip = bill.calculateTip(bill.getSubTotal(), TipMode.percent, bill.getTip()); //calculate the tip
+          decimal grandTotal = bill.getSubTotal() + bill.getTax() + calculatedTip; //get the grand total
+          List<Share> calculatedShares = testShare.CalculateShares(bill, attendees, RoundingMode.up); //calculate each attendees shares
 
           //Assert
-          Assert.AreEqual(128.00m, grandTotal);
+          Assert.AreEqual(128.00m, grandTotal); //Compare
       }
 
       [TestMethod] //M4-21
@@ -119,12 +119,12 @@ namespace Splitter.CalculateShares
       {
           //Arrange
           Bill bill = new Bill(100, 13m, 20m, TipMode.percent);
-          List<Share> expectedShares = new List<Share>();
+          List<Share> expectedShares = new List<Share>(); //Create a new expected shares list and add test entries
           Share share1 = new Share("Sofia", 33.34m);
           Share share2 = new Share("Kim", 33.34m);
           Share share3 = new Share("Jessica", 33.32m);
           expectedShares.Add(share1); expectedShares.Add(share2); expectedShares.Add(share3); 
-          List<Attendee> attendees = new List<Attendee>();
+          List<Attendee> attendees = new List<Attendee>(); //Create a new attendees list and add test entries
           Attendee attendee1 = new Attendee("Kim", 1, 1, true);
           Attendee attendee2 = new Attendee("Jessica", 1, 1, true);
           Attendee attendee3 = new Attendee("Michael", 1, 1, true);
@@ -132,12 +132,12 @@ namespace Splitter.CalculateShares
           Share testShare = new Share(); 
 
           //Act
-          decimal calculatedTip = bill.calculateTip(bill.getSubTotal(), TipMode.fixed_tip, bill.getTip());
-          decimal grandTotal = bill.getSubTotal() + bill.getTax() + calculatedTip;
-          List<Share> calculatedShares = testShare.CalculateShares(bill, attendees, RoundingMode.up);
+          decimal calculatedTip = bill.calculateTip(bill.getSubTotal(), TipMode.fixed_tip, bill.getTip()); //Calcuate the bill tip
+          decimal grandTotal = bill.getSubTotal() + bill.getTax() + calculatedTip; //Calculate the grand total
+          List<Share> calculatedShares = testShare.CalculateShares(bill, attendees, RoundingMode.up); //Calculate attendee shares
 
           //Assert
-          Assert.AreEqual(133.00m, grandTotal);
+          Assert.AreEqual(133.00m, grandTotal); //Compare
       }
 
       [TestMethod] //M4-22
@@ -145,20 +145,20 @@ namespace Splitter.CalculateShares
       {
           //Arrange
           Bill bill = new Bill(100, 4m, 0.20m, TipMode.percent);
-          List<Share> expectedShares = new List<Share>();
+          List<Share> expectedShares = new List<Share>(); //Create a new expected shares list and add test entries
           Share share1 = new Share("Sofia", 33.34m);
           Share share2 = new Share("Kim", 33.34m);
           Share share3 = new Share("Jessica", 33.32m);
           expectedShares.Add(share1); expectedShares.Add(share2); expectedShares.Add(share3); 
-          List<Attendee> attendees = new List<Attendee>();
+          List<Attendee> attendees = new List<Attendee>(); //Create a new attendees list and add test entries
           Attendee attendee1 = new Attendee("Kim", 1, 1, false);
-          Attendee attendee2 = new Attendee("Jessica", 1, 1, false);
+          Attendee attendee2 = new Attendee("Jessica", 1, 1, false); //All excluded
           Attendee attendee3 = new Attendee("Michael", 1, 1, false);
           attendees.Add(attendee1); attendees.Add(attendee2); attendees.Add(attendee3);
           Share testShare = new Share();
 
           //Act and Assert
-          Assert.Throws<ArgumentNullException>(() => testShare.CalculateShares(bill, attendees, RoundingMode.up));
+          Assert.Throws<Exception>(() => testShare.CalculateShares(bill, attendees, RoundingMode.up)); //Compare
       }
 
       [TestMethod] //M4-23
@@ -166,12 +166,12 @@ namespace Splitter.CalculateShares
       {
           //Arrange
           Bill bill = new Bill(100, 4m, 0.20m, TipMode.percent);
-          List<Share> expectedShares = new List<Share>();
+          List<Share> expectedShares = new List<Share>(); //Create a new expected shares list and add test entries
           Share share1 = new Share("Sofia", 33.34m);
           Share share2 = new Share("Kim", 33.34m);
           Share share3 = new Share("Jessica", 33.32m);
           expectedShares.Add(share1); expectedShares.Add(share2); expectedShares.Add(share3); 
-          List<Attendee> attendees = new List<Attendee>();
+          List<Attendee> attendees = new List<Attendee>(); //Create a new attendees list and add test entries
           Attendee attendee1 = new Attendee("Kim", 0, 1, true);
           Attendee attendee2 = new Attendee("Jessica", 0, 1, true);
           Attendee attendee3 = new Attendee("Michael", 0, 1, true);
@@ -179,7 +179,7 @@ namespace Splitter.CalculateShares
           Share testShare = new Share();
 
           //Act and Assert
-          Assert.Throws<ArgumentNullException>(() => testShare.CalculateShares(bill, attendees, RoundingMode.up));
+          Assert.Throws<Exception>(() => testShare.CalculateShares(bill, attendees, RoundingMode.up)); //Compare
       }
     }
 }

@@ -30,10 +30,7 @@ public class Share
     {
 
         //Decleration
-        decimal total = 0m;
-        decimal roundedTotal = 0;
         decimal roundedNumber = 0m;
-        decimal origNum = 0m;
         decimal diffrence = 0;
 
         if (rawShares.Count == 0) //Check if the array is empty
@@ -50,36 +47,25 @@ public class Share
             case RoundingMode.up: //percentage tip
                 for (int i = 0; i < rawShares.Count(); i++)
                 {
-                    total += rawShares[i].amount;
-                    origNum = rawShares[i].amount;
-                    roundedNumber = Math.Ceiling(rawShares[i].amount * 100) / 100;
+                    roundedNumber = Math.Ceiling(rawShares[i].amount * 100) / 100; //round each share up to the nearest cent
                     rawShares[i].amount = roundedNumber;
-                    roundedTotal += roundedNumber;
-                    diffrence += roundedNumber - origNum;
+                    Console.WriteLine("Print: " + rawShares[i].amount);
                 }
-                rawShares[rawShares.Count()-1].amount -= roundedTotal - total;
                 break;
             case RoundingMode.down: //percentage tip
                 for (int i = 0; i < rawShares.Count(); i++)
                 {
-                    total += rawShares[i].amount;
-                    origNum = rawShares[i].amount;
-                    roundedNumber = Math.Floor(rawShares[i].amount * 100) / 100;
+                    roundedNumber = Math.Floor(rawShares[i].amount * 100) / 100; //round each share down
                     rawShares[i].amount = roundedNumber;
-                    roundedTotal += roundedNumber;
-                    diffrence += origNum - roundedNumber;
                 }
                 rawShares[rawShares.Count()-1].amount += diffrence;
                 break;
             case RoundingMode.bankers:
                 for (int i = 0; i < rawShares.Count(); i++)
                 {
-                total += rawShares[i].amount;
-                roundedNumber = Math.Round(rawShares[i].amount, 2);
-                rawShares[i].amount = roundedNumber;
-                roundedTotal += roundedNumber;
+                    roundedNumber = Math.Round(rawShares[i].amount, 2); //round each share using bankers rounding
+                    rawShares[i].amount = roundedNumber;
                 }
-                rawShares[rawShares.Count()-1].amount += total - roundedTotal;
                 break;
             default:
                 //Nothing to do here
@@ -106,26 +92,26 @@ public class Share
 
         for (int i = 0; i< attendees.Count(); i++) //Error checking loop
         {
-            switch(attendees[i].getIncluded())
+            switch(attendees[i].getIncluded()) //Check if attendees are included
             {
-                case true:
+                case true: 
                     //No error
                     if (attendees[i].weight == 0)
                     {
-                       zeroWeightsCount += 1;   
+                       zeroWeightsCount += 1; //Count the number of present attendees with 0 weights  
                     }
                     break;
-                case false:
-                    excludedAttendeeCount += 1;   
+                case false: 
+                    excludedAttendeeCount += 1; //Count the number of attendees without a share   
                     break;
                 default:
                     //Do nothing
             }       
 
-            //Throw an exception if all weights are zero or all attendees are excluded
+            //Throw an exception if all attendee weights are zero or all attendees are excluded
             if (excludedAttendeeCount == attendees.Count() || zeroWeightsCount == attendees.Count())
             {
-                throw new ArgumentNullException();
+                throw new Exception(); //Throw an ArguementNullException
             }
         }
 
@@ -148,16 +134,16 @@ public class Share
             {
                 calculatedShares.Add(new Share () //Create a new share object based on the attendee
                 {
-                    name = attendees[i].getName(),
-                    amount = billShare * (decimal)attendees[i].getWeight(),
+                    name = attendees[i].getName(), //track the attendees name
+                    amount = billShare * (decimal)attendees[i].getWeight(), //assign their share amount
                 });
 
             } else
             {
-                calculatedShares.Add(new Share () //Add a 0 share amount for the excluded attendee
+                calculatedShares.Add(new Share () //Create a new share object
                 {
                     name = attendees[i].getName(),
-                    amount = 0,
+                    amount = 0, //Add a 0 share amount for the excluded attendee
                 });
                 
             }        

@@ -61,7 +61,7 @@ public class Bill
 
         } else
         {
-            throw new ArgumentOutOfRangeException();   
+            throw new ArgumentOutOfRangeException(); //Throw an argument out of range exception 
         }
     }
 
@@ -69,23 +69,22 @@ public class Bill
     {
 
         //Validate Attendee
-        if (attendees.Count() == 0)
+        if (attendees.Count() == 0) //If the list is empty
         {
-            return -1;
+            return -1; //Return with an error code
         }
 
-        //Validate Bill
+        //Validate bill details are not negative
         if (bill.getSubTotal() < 0 || bill.getTax() < 0 || bill.getTip() < 0)
         {
             return -1; //invalidate the bill with attendees
         }
-
-        return 0;
+        return 0; //return successfull
     }
 
     public String Format(Bill bill, List<Attendee> attendees, List<Share> roundedShares)
     {
-        //Create the receipt
+        //Create the and format the receipt string
         String receipt = $"Lunch | SubTotal: {bill.getSubTotal()} | Tax: {bill.getTax()} | Tip: {bill.getTip()} | {attendees[0].getName()}: {roundedShares[0].getAmount()} | {attendees[1].getName()}: {roundedShares[1].getAmount()} | Vincent Kacperski | 2026-10-02 | 6:14pm";
         
         return receipt;

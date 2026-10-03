@@ -1,6 +1,6 @@
 public enum RoundingMode {
-    none,
-    down,
-    up,
-    bankers,
+    none, //no rounding
+    down, //round down to the nearest cent
+    up, //round up to the nearest cent
+    bankers, //round to the nearest even
 }

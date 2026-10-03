@@ -6,7 +6,7 @@ namespace ValidateTests
     public class ValidateTest
     {
       
-      /*[TestMethod] //M3-12
+      [TestMethod] //M3-12
       public void Validate_CompleteBillDetails_ReturnsOk()
       {
         //Arrange
@@ -76,7 +76,7 @@ namespace ValidateTests
 
         //Assert  
         Assert.AreEqual(result, error);
-      }*/
+      }
 
       [TestMethod] //M3-16
       public void Validate_ZeroAttendees_ReturnsFail()

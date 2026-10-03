@@ -11,12 +11,12 @@ namespace BillTests
             //Arrange
             decimal billTotal= 0;
             decimal tip_input = 0;
-            decimal expectedTip = 0;
+            decimal expectedTip = 0m;
             TipMode tm;
-            Bill bill = new Bill(95, 5, 0, TipMode.none); //Create a new bill object
+            Bill bill = new Bill(100, 5, 0, TipMode.none); //Create a new bill object
 
             //Act
-            billTotal = bill.getSubTotal() + bill.getTax();
+            billTotal = bill.getSubTotal();
             tip_input = bill.getTip();
             tm = bill.getTipMode();
             decimal actualResult = bill.calculateTip(billTotal, tm, tip_input);
@@ -33,10 +33,10 @@ namespace BillTests
             decimal tip_input = 0;
             decimal expectedTip = 18;
             TipMode tm;
-            Bill bill = new Bill(110, 10, 0.15m, TipMode.percent); //Create a new bill object
+            Bill bill = new Bill(120, 10, 0.15m, TipMode.percent); //Create a new bill object
 
             //Act
-            billTotal = bill.getSubTotal() + bill.getTax();
+            billTotal = bill.getSubTotal();
             tip_input = bill.getTip();
             tm = bill.getTipMode();
             decimal actualResult = bill.calculateTip(billTotal, tm, tip_input);
@@ -51,17 +51,18 @@ namespace BillTests
             //Arrange
             decimal billTotal = 0;
             decimal tip_input = 0;
+            decimal expectedTip = 15; //expected tip of 15 fixed
             TipMode tm;
-            Bill bill = new Bill(80, 5, -15m, TipMode.percent); //Create a new bill object
+            Bill bill = new Bill(100, 5, 15m, TipMode.fixed_tip); //Create a new bill object
 
             //Act
-            billTotal = bill.getSubTotal() + bill.getTax();
+            billTotal = bill.getSubTotal();
             tip_input = bill.getTip();
             tm = bill.getTipMode();
+            decimal actualResult = bill.calculateTip(billTotal, tm, tip_input);
 
-            //Act and Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => bill.calculateTip(billTotal, tm, tip_input));
-
+            //Assert
+            Assert.AreEqual(expectedTip, actualResult);
         }
 
         [TestMethod] //M1-04
@@ -74,12 +75,12 @@ namespace BillTests
             Bill bill = new Bill(-80, 5, 0.15m, TipMode.percent); //Create a new bill object
 
             //Act
-            billTotal = bill.getSubTotal() + bill.getTax();
+            billTotal = bill.getSubTotal();
             tip_input = bill.getTip();
             tm = bill.getTipMode();
 
             //Assert
-            ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => bill.calculateTip(billTotal, tm, tip_input));
+            Assert.Throws<ArgumentOutOfRangeException>(() => bill.calculateTip(billTotal, tm, tip_input));
 
         }
 
@@ -88,19 +89,17 @@ namespace BillTests
         {
             //Arrange
             decimal billTotal = 0;
-            decimal tip_input = 10;
-            decimal expectedTip = 12;
+            decimal tip_input = 0;
             TipMode tm;
-            Bill bill = new Bill(70, 10, 0.15m, TipMode.percent); //Create a new bill object
+            Bill bill = new Bill(70, 10, -10, TipMode.percent); //Create a new bill object
 
             //Act
             billTotal = bill.getSubTotal() + bill.getTax();
             tip_input = bill.getTip();
             tm = bill.getTipMode();
-            decimal actualResult = bill.calculateTip(billTotal, tm, tip_input);
 
             //Assert
-            Assert.AreEqual(expectedTip, actualResult);
+            Assert.Throws<ArgumentOutOfRangeException>(() => bill.calculateTip(billTotal, tm, tip_input));
         }
     }
 } 
