@@ -86,11 +86,12 @@ public class Share
         int attendeeCount;
         int excludedAttendeeCount = 0; //Counts the number of attendees not included
         int zeroWeightsCount = 0; //Counts the number attendes that have no weights
+
         //Calculations
         subTotal = bill.getSubTotal(); //Get the subTotal for share calculations
         attendeeCount = attendees.Count(); //Get the total number of attendees
 
-        for (int i = 0; i< attendees.Count(); i++) //Error checking loop
+        for (int i = 0; i < attendees.Count(); i++) //Error checking loop
         {
             switch(attendees[i].getIncluded()) //Check if attendees are included
             {

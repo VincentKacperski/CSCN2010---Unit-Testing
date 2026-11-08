@@ -75,7 +75,7 @@ namespace Splitter.CalculateShares
           Attendee attendee2 = new Attendee("Jessica", 2, 1, true);
           Attendee attendee3 = new Attendee("Sofia", 1, 1, false);
           attendees.Add(attendee1); attendees.Add(attendee2); attendees.Add(attendee3);
-          Share testShare = new Share(); 
+          Share testShare = new Share();
 
           //Act
           decimal calculatedTip = bill.calculateTip(bill.getSubTotal(), TipMode.fixed_tip, bill.getTip());
