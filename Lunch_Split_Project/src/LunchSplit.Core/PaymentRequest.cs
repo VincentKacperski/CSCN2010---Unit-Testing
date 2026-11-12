@@ -1,30 +1,24 @@
-using Moq;
-using Moq.Protected;
-using NUnit.Framework;
+using Square;
 
-namespace PaymentRequests.Tests;
+public sealed record PaymentRequest (
+    string idempotency_key,
+    string source_id,
+    bool accept_partial_authorization,
+    int monetary_amount,
+    int app_fee_money,
+    bool autoComplete,
+    Address billing_address,
+    string buyer_email_address
+);
 
-public class PaymentRequestTests {
-
-    // Test M3-02: Card Declined Exception Simulation
-    [TestMethod]
-    [ExpectedException(typeof(PaymentDeclinedException))]
-    public async Task ProcessPayment_CardDeclined_ThrowsPaymentDeclinedException()
-    {
-        // Arrange
-        var mock = new Mock<IPaymentProcessor>();
-        mock.Setup(p => p.ProcessPaymentAsync(It.Is<PaymentRequest>(r => r.CardNonce
-        == "cnon:card-nonce-declined"))).ThrowsAsync(new PaymentDeclinedException("Card declined:INSUFFICIENT_FUNDS"));
-        var service = new SquarePaymentService(mock.Object);
-
-        // Act
-        await service.ExecuteTransactionAsync("cnon:card-nonce-declined", 50.00m);
-    }
-
+//Defines the payments statuses that can go through
+public enum PaymentStatus
+{
+    Unknown, //Payment was unknown
+    Failed, //Payment has failed
+    Cancelled, //Payment has been cancelled
+    Completed, //Payment has been completed
+    Approved, //Payment is approved  
+    Pending, //Payment is pending
+  
 }
-
-/*
-Domain-specific models representing monetary amount,
-currency code (e.g. 'CAD'), idempotency key, card nonce,
-and resulting transaction IDs/error codes.
-*/

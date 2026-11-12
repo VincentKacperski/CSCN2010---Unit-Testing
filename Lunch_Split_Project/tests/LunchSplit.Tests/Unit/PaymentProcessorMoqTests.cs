@@ -8,27 +8,35 @@ namespace PaymentProcessorMoq.Tests;
 public class PaymentProcessorMoqTests {
 
     [TestMethod] //M3-03
-    public void FirstTest()
+    public void SimulateGatewayNetwork_ConfiguringMoq_ThrowHttpExcpetion()
     {
-       //Do nothing for now
+       /*
+         Simulate gateway network timeout by configuring Moq to throw HttpRequestException.
+       */
     }
 
     [TestMethod] //M3-04
-    public void SecondTest()
+    public void ParameterInvocation_ProcessPaymentAsync_MoqVerify()
     {
-       //Do nothing for now
+       /*
+         Parameter & invocation verification on ProcessPaymentAsync using Mock.Verify().
+       */
     }
 
     [TestMethod] //M3-05
-    public void ThirdTest()
+    public void PreconditionShortCircut_ZeroBill_PassedPaymentManager()
     {
-       //Do nothing for now
+       /*
+         Precondition short-circuit: $0.00 bill request passed to payment manager.
+       */
     }
 
     [TestMethod] //M3-06
-    public void FourthTest()
+    public void BatchPayment_Iteration_FourAttendeeSplit()
     {
-       //Do nothing for now
+       /*
+         Batch payment iteration across a 4-attendee split bill.
+       */
     }
 
 }

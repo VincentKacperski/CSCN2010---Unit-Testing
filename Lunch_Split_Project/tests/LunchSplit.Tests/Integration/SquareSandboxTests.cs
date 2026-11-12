@@ -8,32 +8,50 @@ namespace SquareSandBox.Tests;
 public class SquareSandboxTests {
 
     [TestMethod] //M3-01
-    public void FirstTest()
+    public void LiveApi_Authorization_SquareMagicNonce()
     {
-        //Do nothing for now
+        /*
+            Live API payment authorization using Square Magic Nonce cnon:card-nonce-ok.
+        */
+    }
+    
+    [TestMethod] //M3-02
+    public void LiveApi_CardDeclinedError_SquareMagicNonce()
+    {
+        /*
+            Live API card declined error using Square Magic Nonce cnon:card-nonce-declined.
+        */
     }
 
-    [TestMethod] //M3-02
-    public void SecondTest()
+    [TestMethod] //M3-03
+    public void SimulateGateway_ConfiguringMoq_HttpRequestException()
     {
-        //Do nothing for now
+        /*
+            Simulate gateway network timeout by configuring Moq to throw HttpRequestException
+        */
     }
 
     [TestMethod] //M3-08
-    public void ThirdTest()
+    public void LiveApi_CurrencyEnforcment_EURtoCAD()
     {
-        //Do nothing for now
+        /*
+            Live API unsupported currency enforcement (e.g., submitting EUR to CAD location).
+        */
     }
 
     [TestMethod] //M3-09
-    public void FourthTest()
+    public void LiveApi_IdempotencyKeyVerification_DuplicateIdempotencyKey()
     {
-        //Do nothing for now
+        /*
+            Live API idempotency key header verification using duplicate idempotency_key.
+        */
     }
 
     [TestMethod] //M3-10
-    public void FifthTest()
+    public void LiveApi_TransactionStatus_GETv2Payments()
     {
-        //Do nothing for now
+        /*
+            Live API transaction status query (GET /v2/payments/{payment_id}).
+        */
     }
 }
