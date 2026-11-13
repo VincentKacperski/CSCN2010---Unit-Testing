@@ -1,18 +1,12 @@
-using Square;
-
-public sealed record PaymentRequest (
-    string idempotency_key,
+public record PaymentRequest (
     string source_id,
-    bool accept_partial_authorization,
-    int monetary_amount,
-    int app_fee_money,
-    bool autoComplete,
-    Address billing_address,
-    string buyer_email_address
+    string idempotency_key,
+    int amount_money,
+    string card_nonce
 );
 
 //Defines the payments statuses that can go through
-public enum PaymentStatus
+public enum PaymentStatus //Payment Statuses when createing a new PaymentRequest
 {
     Unknown, //Payment was unknown
     Failed, //Payment has failed

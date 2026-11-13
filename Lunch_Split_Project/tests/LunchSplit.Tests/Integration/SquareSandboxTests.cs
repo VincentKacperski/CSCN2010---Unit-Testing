@@ -23,6 +23,15 @@ public class SquareSandboxTests {
         */
     }
 
+    // Test M3-02: Card Declined Exception Simulation
+    [TestMethod]
+    public async Task ProcessPayment_CardDeclined_ThrowsPaymentDeclinedException()
+    {
+        /*
+            Test details will come later
+        */
+    }
+
     [TestMethod] //M3-03
     public void SimulateGateway_ConfiguringMoq_HttpRequestException()
     {
