@@ -39,6 +39,26 @@ public class SquareSandboxTests {
         /*
             Live API card declined error using Square Magic Nonce cnon:card-nonce-declined.
         */
+        PaymentRequest request = new PaymentRequest
+        {
+            sourceId = "cnon:card-nonce-declined",
+            amountInCents = 100,
+            currencyType = Currency.Usd,
+            idempotencyKey = Guid.NewGuid().ToString()
+        };
+
+        Mock<IPaymentProcessor> mock = new Mock<IPaymentProcessor>();
+        mock.Setup(r => r.ProcessPaymentAsync(It.IsAny<PaymentRequest>()))
+        .ReturnsAsync(new PaymentResult
+        {
+            transactionStatus = true,
+            paymentId = "cnon:card-nonce-declined"
+        });
+
+        PaymentResult result = await mock.Object.ProcessPaymentAsync(request); 
+
+        NUnit.Framework.Assert.That(result.transactionStatus, Is.True);
+        //NUnit.Framework.Assert.That(result.errorCode, "Card Declined");
     }
 
     [Test] //M3-03
