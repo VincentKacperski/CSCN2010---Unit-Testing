@@ -1,18 +1,20 @@
-public record PaymentRequest (
-    string source_id,
-    string idempotency_key,
-    int amount_money,
-    string card_nonce
-);
+public class PaymentRequest {
 
-//Defines the payments statuses that can go through
-public enum PaymentStatus //Payment Statuses when createing a new PaymentRequest
-{
-    Unknown, //Payment was unknown
-    Failed, //Payment has failed
-    Cancelled, //Payment has been cancelled
-    Completed, //Payment has been completed
-    Approved, //Payment is approved  
-    Pending, //Payment is pending
-  
+    //Get the payment source card (payment_nonce)
+    public string? sourceId {get; set;} = string.Empty;
+    //Represnets a currency in total cents
+    public int amountInCents {get; set;}
+    //Three lets ISO 4217 currency code
+    public Square.Currency currencyType {get; set;}
+    //Unique string key to prevent duplicte transactions
+    public string? idempotencyKey {get; set;} = string.Empty;
+    //Indicates the pysical location or vendor
+    public string? locationId {get; set;} = string.Empty;
+    //Process fund immediatly or put them on hold
+    public string? customerId {get; set;} = string.Empty;
+    //Process fund immediatly or put them on hold
+    public string? referenceId {get; set;} = string.Empty;
+    //Process fund immediatly or put them on hold
+    public bool autoComplete {get; set;}
+
 }

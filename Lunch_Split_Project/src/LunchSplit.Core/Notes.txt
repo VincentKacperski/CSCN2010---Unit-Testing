@@ -1,0 +1,13 @@
+Square Operation
+
+//Create a payment
+CreateAsync()
+
+//Retrieve a payment
+GetAsync()
+
+//Cancel a payment
+CancelAsync()
+
+//Complete a payment
+CompleteAsync()

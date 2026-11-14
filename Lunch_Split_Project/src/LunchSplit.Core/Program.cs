@@ -1,10 +1,28 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using Castle.Core.Configuration;
+using Square;
 
-Console.WriteLine("Hello, World!");
+namespace SquarePaymentsApplication
+{
+    public class Program
+    {
+        public static async Task Main(string[] args)
+        {
+        }
+    }
+}
 
-//(Splitter)Exposes ComputeTip(decimal subtotal, TipMode mode, decimal tipInput) -> decimal tip 
-//and CalculateShares(Bill bill, List<Attendee> attendees, RoundingMode roundingMode) -> List<Share>
+//Still working on finishing th builder for getting clients
+//I will be using this code to register gateway clients
+//will register the access token later
+/*
+builder.Services.AddSingleton(ProviderMetadata =>
+{
+  var configuration = provider.GetRequiredService<IConfiguration>();
+  var accessToken = configuration["Square:AccessToken"];
+  return new SquareClient(accessToken);
 
-//(Rounder)Exposes RoundShares(List<Share> rawShares, RoundingMode mode) -> List<Share>.
-//Must implement the Penny Reconciliation algorithm
+});
 
+builder.Services.AddScoped<ISquarePaymentsGateway, SquarePaymentsGateway>();
+
+builder.Services.AddScoped<IPaymentProcessor, SquarePaymentService>();*/

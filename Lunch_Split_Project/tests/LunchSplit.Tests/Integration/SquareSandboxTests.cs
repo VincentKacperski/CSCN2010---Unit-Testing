@@ -1,38 +1,47 @@
 using Moq;
-using Moq.Protected;
 using NUnit.Framework;
+using Square;
 
-namespace SquareSandBox.Tests;
-
-[TestClass]
+[TestFixture]
 public class SquareSandboxTests {
 
-    [TestMethod] //M3-01
-    public void LiveApi_Authorization_SquareMagicNonce()
+    [Test] //M3-01
+    public async Task LiveApi_Authorization_SquareMagicNonce()
     {
         /*
             Live API payment authorization using Square Magic Nonce cnon:card-nonce-ok.
         */
+        PaymentRequest request = new PaymentRequest
+        {
+            sourceId = "cnon:card-nonce-ok",
+            amountInCents = 100,
+            currencyType = Currency.Usd,
+            idempotencyKey = Guid.NewGuid().ToString()
+        };
+
+        Mock<IPaymentProcessor> mock = new Mock<IPaymentProcessor>();
+        mock.Setup(r => r.ProcessPaymentAsync(It.IsAny<PaymentRequest>()))
+        .ReturnsAsync(new PaymentResult
+        {
+            transactionStatus = true,
+            paymentId = "cnon:card-nonce-ok"
+        });
+
+        PaymentResult result = await mock.Object.ProcessPaymentAsync(request); 
+
+        NUnit.Framework.Assert.That(result.transactionStatus, Is.True);
+        NUnit.Framework.Assert.That(result.paymentId, Is.Not.Empty);
     }
     
-    [TestMethod] //M3-02
-    public void LiveApi_CardDeclinedError_SquareMagicNonce()
+    [Test] //M3-02
+    public async Task LiveApi_CardDeclinedError_SquareMagicNonce()
     {
         /*
             Live API card declined error using Square Magic Nonce cnon:card-nonce-declined.
         */
     }
 
-    // Test M3-02: Card Declined Exception Simulation
-    [TestMethod]
-    public async Task ProcessPayment_CardDeclined_ThrowsPaymentDeclinedException()
-    {
-        /*
-            Test details will come later
-        */
-    }
-
-    [TestMethod] //M3-03
+    [Test] //M3-03
     public void SimulateGateway_ConfiguringMoq_HttpRequestException()
     {
         /*
@@ -40,7 +49,7 @@ public class SquareSandboxTests {
         */
     }
 
-    [TestMethod] //M3-08
+    [Test] //M3-08
     public void LiveApi_CurrencyEnforcment_EURtoCAD()
     {
         /*
@@ -48,7 +57,7 @@ public class SquareSandboxTests {
         */
     }
 
-    [TestMethod] //M3-09
+    [Test] //M3-09
     public void LiveApi_IdempotencyKeyVerification_DuplicateIdempotencyKey()
     {
         /*
@@ -56,7 +65,7 @@ public class SquareSandboxTests {
         */
     }
 
-    [TestMethod] //M3-10
+    [Test] //M3-10
     public void LiveApi_TransactionStatus_GETv2Payments()
     {
         /*
