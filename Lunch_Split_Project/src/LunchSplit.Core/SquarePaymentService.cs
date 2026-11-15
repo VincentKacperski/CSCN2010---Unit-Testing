@@ -12,6 +12,7 @@ public class SquarePaymentService : IPaymentProcessor
     _gateway = gateway;
   }
 
+  //Creates a new payment by going through the Square API
   public async Task<PaymentResult> ProcessPaymentAsync(PaymentRequest request)
   {
       //Check if the card nonce has been declined
@@ -24,12 +25,13 @@ public class SquarePaymentService : IPaymentProcessor
 
       //Check if the payment request is null 
       if (request.amountInCents <= 0)
-          throw new ArgumentNullException("Payment cannot be 0."); //Throw and argument null exception
+          throw new ArgumentNullException("Payment cannot be 0.");
 
        //Check if the bill total is 0
       if (string.IsNullOrWhiteSpace(request.idempotencyKey))
-          throw new ArgumentNullException("Idempotency Key is required."); //Throw a ArgumentNullException
+          throw new ArgumentNullException("Idempotency Key is required.");
 
+      //Stores deails related to the requested payment in a new squareRequest instance.
       Payments.CreatePaymentRequest squareRequest = new Payments.CreatePaymentRequest{
         SourceId = request.sourceId,
         IdempotencyKey = Guid.NewGuid().ToString(),
@@ -89,7 +91,23 @@ public class SquarePaymentService : IPaymentProcessor
   //Get the status of the current transaction from the client
   public async Task<PaymentStatus> GetTransactionStatusAsync(string paymentId)
   {
+    //This function returns null if it is not configured
+    //This method returns our payment response after we created it
     GetPaymentResponse response = await _gateway.GetPaymentAsync(paymentId);
+
+    //Check if the response object returned is null
+    if (response == null)
+    {
+        throw new InvalidOperationException(
+            "Null response object");
+    }
+
+    //Check if the payment returned is null
+    if (response.Payment == null)
+    {
+        throw new InvalidOperationException(
+            "Null payment object!");
+    }
 
     //Get payment details from response
     Payment payment = response.Payment;
@@ -103,12 +121,10 @@ public class SquarePaymentService : IPaymentProcessor
 
     return new PaymentStatus
     {
-      paymentId = payment.Id,
-      paymentStatus = payment.Status?.ToString(),
-      amount = payment.AmountMoney?.Amount ?? 0,
-      currencyType = payment.AmountMoney?.Currency?.ToString(),
-      createdAt = DateTime.Parse(payment.CreatedAt),
-      updatedAt = DateTime.Parse(payment.UpdatedAt)
+      paymentId = payment?.Id,
+      paymentStatus = payment?.Status?.ToString(),
+      amount = payment?.AmountMoney?.Amount ?? 0,
+      currencyType = payment?.AmountMoney?.Currency?.ToString(),
     };
   }
 

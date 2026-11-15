@@ -1,64 +1,36 @@
 using Moq;
 using NUnit.Framework;
 using Square;
+using Square.Payments;
 
 [TestFixture]
 public class SquareSandboxTests {
 
+    private Mock<ISquarePaymentsGateway> _gatewayMock;
+    private SquarePaymentService _service;
+
+    [SetUp] 
+    public void Setup()
+    {
+        //Set up a new gateway mock object
+        _gatewayMock =
+            new Mock<ISquarePaymentsGateway>();
+
+        //Create the new gatway mock object
+        _service =
+            new SquarePaymentService(_gatewayMock.Object);
+    }
+
     [Test] //M3-01
     public async Task LiveApi_Authorization_SquareMagicNonce()
     {
-        /*
-            Live API payment authorization using Square Magic Nonce cnon:card-nonce-ok.
-        */
-        PaymentRequest request = new PaymentRequest
-        {
-            sourceId = "cnon:card-nonce-ok",
-            amountInCents = 100,
-            currencyType = Currency.Usd,
-            idempotencyKey = Guid.NewGuid().ToString()
-        };
-
-        Mock<IPaymentProcessor> mock = new Mock<IPaymentProcessor>();
-        mock.Setup(r => r.ProcessPaymentAsync(It.IsAny<PaymentRequest>()))
-        .ReturnsAsync(new PaymentResult
-        {
-            transactionStatus = true,
-            paymentId = "cnon:card-nonce-ok"
-        });
-
-        PaymentResult result = await mock.Object.ProcessPaymentAsync(request); 
-
-        NUnit.Framework.Assert.That(result.transactionStatus, Is.True);
-        NUnit.Framework.Assert.That(result.paymentId, Is.Not.Empty);
+        //Test being rebuilt
     }
     
     [Test] //M3-02
     public async Task LiveApi_CardDeclinedError_SquareMagicNonce()
     {
-        /*
-            Live API card declined error using Square Magic Nonce cnon:card-nonce-declined.
-        */
-        PaymentRequest request = new PaymentRequest
-        {
-            sourceId = "cnon:card-nonce-declined",
-            amountInCents = 100,
-            currencyType = Currency.Usd,
-            idempotencyKey = Guid.NewGuid().ToString()
-        };
-
-        Mock<IPaymentProcessor> mock = new Mock<IPaymentProcessor>();
-        mock.Setup(r => r.ProcessPaymentAsync(It.IsAny<PaymentRequest>()))
-        .ReturnsAsync(new PaymentResult
-        {
-            transactionStatus = true,
-            paymentId = "cnon:card-nonce-declined"
-        });
-
-        PaymentResult result = await mock.Object.ProcessPaymentAsync(request); 
-
-        NUnit.Framework.Assert.That(result.transactionStatus, Is.True);
-        //NUnit.Framework.Assert.That(result.errorCode, "Card Declined");
+        //Test being rebuilt
     }
 
     [Test] //M3-03

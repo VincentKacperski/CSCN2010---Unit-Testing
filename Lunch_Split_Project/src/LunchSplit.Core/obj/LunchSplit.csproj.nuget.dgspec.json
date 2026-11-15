@@ -61,6 +61,18 @@
               "target": "Package",
               "version": "[4.5.2, )"
             },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[11.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.UserSecrets": {
+              "target": "Package",
+              "version": "[11.0.0, )"
+            },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[11.0.0, )"
+            },
             "Moq": {
               "target": "Package",
               "version": "[4.21.0, )"
