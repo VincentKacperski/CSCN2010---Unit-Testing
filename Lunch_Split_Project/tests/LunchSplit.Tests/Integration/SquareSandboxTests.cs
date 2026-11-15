@@ -24,7 +24,61 @@ public class SquareSandboxTests {
     [Test] //M3-01
     public async Task LiveApi_Authorization_SquareMagicNonce()
     {
-        //Test being rebuilt
+        //Arrange
+
+        //Create a new payment request
+        PaymentRequest request = new PaymentRequest
+        {
+            sourceId = "cnon:card-nonce-ok",
+            amountInCents = 1000,
+            currencyType = Currency.Usd,
+            idempotencyKey = Guid.NewGuid().ToString()
+        };
+
+        //Create a new payment response
+        var response = new CreatePaymentResponse
+        {
+            Payment = new Payment
+            {
+                Id = "payment-001",
+                Status = "Completed",
+                AmountMoney = new Money
+                {
+                    Amount = 1000,
+                    Currency = Currency.Usd,
+                }   
+            }
+        };
+
+        //Set upp the mock text to create an asyncronous payment
+        _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(response);
+
+        var paymentStatusResponse = new GetPaymentResponse
+        {
+            Payment = new Payment
+            {
+                Id = "payment-001",
+                Status = "COMPLETED",
+                AmountMoney = new Money
+                {
+                    Amount = 1000,
+                    Currency = Currency.Usd
+                }
+            }
+        };
+
+        //Set up the mock text to get the asyncronous payment
+        _gatewayMock
+            .Setup(x => x.GetPaymentAsync("payment-001"))
+            .ReturnsAsync(paymentStatusResponse);
+
+        //Act
+        var result = await _service.ProcessPaymentAsync(request);
+
+        //Assert
+        NUnit.Framework.Assert.That(result.transactionStatus, Is.True);
+        NUnit.Framework.Assert.That(result.paymentId, Is.Not.Null.And.Not.Empty);
+
     }
     
     [Test] //M3-02
