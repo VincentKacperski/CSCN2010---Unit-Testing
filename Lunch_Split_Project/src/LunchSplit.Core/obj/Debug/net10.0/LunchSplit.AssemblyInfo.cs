@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LunchSplit")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f9991654f917596ec3ebc98f3af05fbc5b4cb01")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18053507737d40b41c0bf5f67143d11f82659f2e")]
 [assembly: System.Reflection.AssemblyProductAttribute("LunchSplit")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LunchSplit")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -189,7 +189,10 @@ public class SquareSandboxTests {
         _gatewayMock.Setup(x => x.GetPaymentAsync("payment-003"))
         .ReturnsAsync(paymentStatusResponse);
 
+        //Act
         var result = await _service.ProcessPaymentAsync(request);
+
+        //Assert
         NUnit.Framework.Assert.That(result.transactionStatus, Is.False);
         NUnit.Framework.Assert.AreEqual("PAYMENT_FAILED", result.errorCode);
     }
@@ -200,6 +203,62 @@ public class SquareSandboxTests {
         /*
             Live API idempotency key header verification using duplicate idempotency_key.
         */
+        //Arrange
+
+        //Create a new payment request
+        PaymentRequest request = new PaymentRequest
+        {
+            sourceId = "cnon:card-nonce-ok",
+            amountInCents = 1000,
+            currencyType = Currency.Cad,
+            idempotencyKey = Guid.NewGuid().ToString()
+        };
+
+        //Create a new payment response
+        CreatePaymentResponse response = new CreatePaymentResponse
+        {
+            Payment = new Payment
+            {
+                Id = "payment-004",
+                Status = "Completed",
+                AmountMoney = new Money
+                {
+                    Amount = 1000,
+                    Currency = Currency.Cad,
+                }   
+            }
+        };
+
+        //Set up the mock text to create an asyncronous payment
+        _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(response);
+
+        GetPaymentResponse paymentStatusResponse = new GetPaymentResponse
+        {
+            Payment = new Payment
+            {
+                Id = "payment-004",
+                Status = "Completed",
+                AmountMoney = new Money
+                {
+                    Amount = 1000,
+                    Currency = Currency.Eur
+                }
+            }
+        };
+
+        //Set up the mock text to get the asyncronous payment
+        _gatewayMock
+            .Setup(x => x.GetPaymentAsync("payment-003"))
+            .ReturnsAsync(paymentStatusResponse);
+
+        //Act
+        var resultOne = await _service.ProcessPaymentAsync(request);
+        var resultTwo = await _service.ProcessPaymentAsync(request);
+
+        //Assert
+        NUnit.Framework.Assert.That(resultOne.transactionStatus, Is.True);
+        NUnit.Framework.Assert.That(resultTwo.transactionStatus, Is.True);
+        NUnit.Framework.Assert.That(resultOne.paymentId, Is.EqualTo(resultTwo.paymentId));
     }
 
     [Test] //M3-10
