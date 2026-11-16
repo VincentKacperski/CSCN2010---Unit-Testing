@@ -144,7 +144,6 @@ public class SquareSandboxTests {
     public async Task LiveApi_CurrencyEnforcment_EURtoCAD()
     {
         //Arrange
-
         //Create a new payment request
         PaymentRequest request = new PaymentRequest
         {
@@ -187,12 +186,10 @@ public class SquareSandboxTests {
         };
 
         //Set up the mock text to get the asyncronous payment
-        _gatewayMock
-            .Setup(x => x.GetPaymentAsync("payment-003"))
-            .ReturnsAsync(paymentStatusResponse);
+        _gatewayMock.Setup(x => x.GetPaymentAsync("payment-003"))
+        .ReturnsAsync(paymentStatusResponse);
 
         var result = await _service.ProcessPaymentAsync(request);
-
         NUnit.Framework.Assert.That(result.transactionStatus, Is.False);
         NUnit.Framework.Assert.AreEqual("PAYMENT_FAILED", result.errorCode);
     }
