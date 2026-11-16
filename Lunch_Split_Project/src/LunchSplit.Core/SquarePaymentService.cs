@@ -37,12 +37,6 @@ public class SquarePaymentService : IPaymentProcessor
           //Square retuns a result with all payment details
           var response = await _gateway.CreatePaymentAsync(squareRequest);
 
-          Console.WriteLine($"Status: {response.Payment.Status}");
-          Console.WriteLine($"Comparison: {string.Equals(
-          response.Payment.Status,
-          "COMPLETED",
-          StringComparison.OrdinalIgnoreCase)}");
-
           // Check Square's returned errors
           var squareError = response.Errors?.FirstOrDefault();
 

@@ -36,7 +36,7 @@ public class SquareSandboxTests {
         };
 
         //Create a new payment response
-        var response = new CreatePaymentResponse
+        CreatePaymentResponse response = new CreatePaymentResponse
         {
             Payment = new Payment
             {
@@ -53,7 +53,7 @@ public class SquareSandboxTests {
         //Set upp the mock text to create an asyncronous payment
         _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(response);
 
-        var paymentStatusResponse = new GetPaymentResponse
+        GetPaymentResponse paymentStatusResponse = new GetPaymentResponse
         {
             Payment = new Payment
             {
@@ -73,7 +73,7 @@ public class SquareSandboxTests {
             .ReturnsAsync(paymentStatusResponse);
 
         //Act
-        var result = await _service.ProcessPaymentAsync(request);
+        PaymentResult result = await _service.ProcessPaymentAsync(request);
 
         //Assert
         NUnit.Framework.Assert.That(result.transactionStatus, Is.True);
@@ -96,7 +96,7 @@ public class SquareSandboxTests {
         };
 
         //Create a new payment response
-        var response = new CreatePaymentResponse
+        CreatePaymentResponse response = new CreatePaymentResponse
         {
             Payment = new Payment
             {
@@ -113,7 +113,7 @@ public class SquareSandboxTests {
         //Set up the mock text to create an asyncronous payment
         _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(response);
 
-        var paymentStatusResponse = new GetPaymentResponse
+        GetPaymentResponse paymentStatusResponse = new GetPaymentResponse
         {
             Payment = new Payment
             {
@@ -133,7 +133,7 @@ public class SquareSandboxTests {
             .ReturnsAsync(paymentStatusResponse);
 
         //Act
-        var result = await _service.ProcessPaymentAsync(request);
+        PaymentResult result = await _service.ProcessPaymentAsync(request);
 
         //Assert
         NUnit.Framework.Assert.That(result.transactionStatus, Is.False);
@@ -154,7 +154,7 @@ public class SquareSandboxTests {
         };
 
         //Create a new payment response
-        var response = new CreatePaymentResponse
+        CreatePaymentResponse response = new CreatePaymentResponse
         {
             Payment = new Payment
             {
@@ -171,7 +171,7 @@ public class SquareSandboxTests {
         //Set up the mock text to create an asyncronous payment
         _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(response);
 
-        var paymentStatusResponse = new GetPaymentResponse
+        GetPaymentResponse paymentStatusResponse = new GetPaymentResponse
         {
             Payment = new Payment
             {
@@ -190,7 +190,7 @@ public class SquareSandboxTests {
         .ReturnsAsync(paymentStatusResponse);
 
         //Act
-        var result = await _service.ProcessPaymentAsync(request);
+        PaymentResult result = await _service.ProcessPaymentAsync(request);
 
         //Assert
         NUnit.Framework.Assert.That(result.transactionStatus, Is.False);
@@ -252,8 +252,8 @@ public class SquareSandboxTests {
             .ReturnsAsync(paymentStatusResponse);
 
         //Act
-        var resultOne = await _service.ProcessPaymentAsync(request);
-        var resultTwo = await _service.ProcessPaymentAsync(request);
+        PaymentResult resultOne = await _service.ProcessPaymentAsync(request);
+        PaymentResult resultTwo = await _service.ProcessPaymentAsync(request);
 
         //Assert
         NUnit.Framework.Assert.That(resultOne.transactionStatus, Is.True);
@@ -267,5 +267,59 @@ public class SquareSandboxTests {
         /*
             Live API transaction status query (GET /v2/payments/{payment_id}).
         */
+        //Create a new payment request
+        PaymentRequest request = new PaymentRequest
+        {
+            sourceId = "cnon:card-nonce-ok",
+            amountInCents = 1000,
+            currencyType = Currency.Cad,
+            idempotencyKey = Guid.NewGuid().ToString()
+        };
+
+        //Create a new payment response
+        CreatePaymentResponse response = new CreatePaymentResponse
+        {
+            Payment = new Payment
+            {
+                Id = "payment-005",
+                Status = "Completed",
+                AmountMoney = new Money
+                {
+                    Amount = 1000,
+                    Currency = Currency.Cad,
+                }   
+            }
+        };
+
+        //Set up the mock text to create an asyncronous payment
+        _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(response);
+
+        GetPaymentResponse paymentStatusResponse = new GetPaymentResponse
+        {
+            Payment = new Payment
+            {
+                Id = "payment-005",
+                Status = "Completed",
+                AmountMoney = new Money
+                {
+                    Amount = 1000,
+                    Currency = Currency.Cad
+                }
+            }
+        };
+
+        //Set up the mock text to get the asyncronous payment
+        _gatewayMock
+            .Setup(x => x.GetPaymentAsync("payment-005"))
+            .ReturnsAsync(paymentStatusResponse);
+
+        // Act
+        PaymentResult createResult = await _service.ProcessPaymentAsync(request);
+        PaymentStatus statusResult = await _service.GetTransactionStatusAsync(createResult.paymentId);
+
+        //Assert
+        NUnit.Framework.Assert.That(statusResult, Is.Not.Null);
+        NUnit.Framework.Assert.That(statusResult.paymentId, Is.EqualTo(createResult.paymentId));
+        NUnit.Framework.Assert.That(statusResult.paymentStatus,Is.EqualTo("Completed"));
     }
 }
