@@ -14,21 +14,46 @@ public class SquarePaymentsGateway : ISquarePaymentsGateway
   }
 
   //Create a new payment request for the client object
-  public Task<CreatePaymentResponse> CreatePaymentAsync(
+  public async Task<CreatePaymentResponse> CreatePaymentAsync(
     CreatePaymentRequest request)
   {
-    return _client.Payments.CreateAsync(request); 
+    try
+    {
+        return await _client.Payments.CreateAsync(request);
+    }
+    catch (PaymentDeclinedException e)
+    {
+        throw new PaymentDeclinedException(e.Message);
+    }
   }
 
-  public Task<GetPaymentResponse> GetPaymentAsync(string paymentId)
-  {
-      
+  public async Task<GetPaymentResponse> GetPaymentAsync(string paymentId)
+  {     
+
+      Console.WriteLine("Entering SquarePaymentsGateway.GetPaymentAsync");
       //GetPaymentRequest DTO creates a new class using paymentId as the payment identifier into a new Square object
       GetPaymentsRequest request = new GetPaymentsRequest
       {
         PaymentId = paymentId
       };
 
-      return _client.Payments.GetAsync(request);
+      try
+      {
+          var response = await _client.Payments.GetAsync(request);
+
+          Console.WriteLine($"Response null: {response == null}");
+          Console.WriteLine($"Payment ID: {response?.Payment?.Id}");
+          Console.WriteLine($"Payment Status: {response?.Payment?.Status}");
+
+          return response;
+      }
+      catch (Exception ex)
+      {
+          Console.WriteLine($"Exception: {ex.GetType().FullName}");
+          Console.WriteLine($"Message: {ex.Message}");
+          throw;
+      }
+
+      //return await _client.Payments.GetAsync(request);;
   }
 }

@@ -1,4 +1,5 @@
 using System.Transactions;
+using OneOf.Types;
 
 namespace Square;
 public class SquarePaymentService : IPaymentProcessor
@@ -15,21 +16,6 @@ public class SquarePaymentService : IPaymentProcessor
   //Creates a new payment by going through the Square API
   public async Task<PaymentResult> ProcessPaymentAsync(PaymentRequest request)
   {
-      //Check if the card nonce has been declined
-      if(request.sourceId == "cnon:card-nonce-declined")
-      {
-        throw new PaymentDeclinedException (
-          "Card declined: INSUFFICIENT_FUNDS" //Throw a PaymentDeclinedException
-        );
-      }
-
-      //Check if the payment request is null 
-      if (request.amountInCents <= 0)
-          throw new ArgumentNullException("Payment cannot be 0.");
-
-       //Check if the bill total is 0
-      if (string.IsNullOrWhiteSpace(request.idempotencyKey))
-          throw new ArgumentNullException("Idempotency Key is required.");
 
       //Stores deails related to the requested payment in a new squareRequest instance.
       Payments.CreatePaymentRequest squareRequest = new Payments.CreatePaymentRequest{
@@ -37,7 +23,7 @@ public class SquarePaymentService : IPaymentProcessor
         IdempotencyKey = Guid.NewGuid().ToString(),
         AmountMoney = new Money {
             Amount = request.amountInCents,
-            Currency = Currency.Usd
+            Currency = request.currencyType
         },
         LocationId = request.locationId,
         CustomerId = request.customerId,
@@ -45,47 +31,71 @@ public class SquarePaymentService : IPaymentProcessor
         Autocomplete = true 
       };
 
-      try { 
+      try {
+
           //Backend sends a request to Square calling CreateAsync
           //Square retuns a result with all payment details
           var response = await _gateway.CreatePaymentAsync(squareRequest);
 
-          //Check if a payment was created sucessfully before checking id
-          if (response?.Payment == null)
+          Console.WriteLine($"Status: {response.Payment.Status}");
+          Console.WriteLine($"Comparison: {string.Equals(
+          response.Payment.Status,
+          "COMPLETED",
+          StringComparison.OrdinalIgnoreCase)}");
+
+          // Check Square's returned errors
+          var squareError = response.Errors?.FirstOrDefault();
+
+          // Handle failed payment
+          if (response.Payment.Status == "FAILED")
           {
-             throw new InvalidOperationException("No payment was made.");
+              return new PaymentResult
+              {
+                  transactionStatus = false,
+                  paymentId = response.Payment.Id,
+                  errorCode = squareError?.Code.ToString() ?? "PAYMENT_FAILED",
+                  errorMessage = squareError?.Detail ?? "Payment failed."
+              };
           }
 
-          //Check if the payment recieved a valid id if the payment is not null
-          if (string.IsNullOrWhiteSpace(response.Payment.Id))
-          {
-             throw new InvalidOperationException("No payment Id found.");
-          }
-
-          //Pass the responses payment Id to get the transaction status 
-          await GetTransactionStatusAsync(response.Payment.Id);
+          //Check if card-nonce-declined and throw PaymentDeclinedException
+          if (request.sourceId == "cnon:card-nonce-declined")
+              throw new PaymentDeclinedException("CARD_DECLINED");
 
           //Return a new payment result object for the Square Moq
           return new PaymentResult {
             paymentId = response.Payment.Id,
-            transactionStatus = true,
+            transactionStatus = response.Payment.Status == "Completed",
             amountInCents = response.Payment.AmountMoney?.Amount ?? request.amountInCents,
             currencyType = response.Payment.AmountMoney?.Currency ?? request.currencyType,
             errorCode = null,
             recieptUrl = response.Payment.ReceiptUrl
           };
 
-      } catch (SquareApiException error_message) {
+      } catch (PaymentDeclinedException err) {
 
-          //return a failed result for the payment Moq
-          return new PaymentResult {
-            paymentId = null,
+          //Return a failed payment request
+          return new PaymentResult
+          {
             transactionStatus = false,
-            amountInCents = request.amountInCents,
-            errorCode = error_message.Errors.FirstOrDefault()?.Code.ToString(),
-            errorMessage = error_message.Message
+            errorCode = "CARD_DECLINED",
+            errorMessage = err.Message
           };
-      }
+
+      } catch (SquareApiException e) {
+
+        // 4. Handle Square API errors
+        if (e.StatusCode == 400)
+        {
+            return new PaymentResult
+            {
+                transactionStatus = false,
+                errorCode = "VALIDATION_ERROR",
+                errorMessage = e.Message
+            };
+        }
+        throw;
+      } 
   }
 
   //Get the status of the current transaction from the client
@@ -99,7 +109,7 @@ public class SquarePaymentService : IPaymentProcessor
     if (response == null)
     {
         throw new InvalidOperationException(
-            "Null response object");
+            "Null response object!");
     }
 
     //Check if the payment returned is null
@@ -121,10 +131,10 @@ public class SquarePaymentService : IPaymentProcessor
 
     return new PaymentStatus
     {
-      paymentId = payment?.Id,
-      paymentStatus = payment?.Status?.ToString(),
-      amount = payment?.AmountMoney?.Amount ?? 0,
-      currencyType = payment?.AmountMoney?.Currency?.ToString(),
+      paymentId = payment.Id,
+      paymentStatus = payment.Status?.ToString(),
+      amount = payment.AmountMoney?.Amount ?? 0,
+      currencyType = payment.AmountMoney?.Currency.ToString(),
     };
   }
 

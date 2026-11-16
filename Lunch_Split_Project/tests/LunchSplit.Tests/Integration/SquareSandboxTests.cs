@@ -84,27 +84,121 @@ public class SquareSandboxTests {
     [Test] //M3-02
     public async Task LiveApi_CardDeclinedError_SquareMagicNonce()
     {
-        //Test being rebuilt
-    }
+        //Arrange
 
-    [Test] //M3-03
-    public void SimulateGateway_ConfiguringMoq_HttpRequestException()
-    {
-        /*
-            Simulate gateway network timeout by configuring Moq to throw HttpRequestException
-        */
+        //Create a new payment request
+        PaymentRequest request = new PaymentRequest
+        {
+            sourceId = "cnon:card-nonce-declined",
+            amountInCents = 1000,
+            currencyType = Currency.Usd,
+            idempotencyKey = Guid.NewGuid().ToString()
+        };
+
+        //Create a new payment response
+        var response = new CreatePaymentResponse
+        {
+            Payment = new Payment
+            {
+                Id = "payment-002",
+                Status = "FAILED",
+                AmountMoney = new Money
+                {
+                    Amount = 1000,
+                    Currency = Currency.Usd,
+                }   
+            }
+        };
+
+        //Set up the mock text to create an asyncronous payment
+        _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(response);
+
+        var paymentStatusResponse = new GetPaymentResponse
+        {
+            Payment = new Payment
+            {
+                Id = "payment-002",
+                Status = "FAILED",
+                AmountMoney = new Money
+                {
+                    Amount = 1000,
+                    Currency = Currency.Usd
+                }
+            }
+        };
+
+        //Set up the mock text to get the asyncronous payment
+        _gatewayMock
+            .Setup(x => x.GetPaymentAsync("payment-002"))
+            .ReturnsAsync(paymentStatusResponse);
+
+        //Act
+        var result = await _service.ProcessPaymentAsync(request);
+
+        //Assert
+        NUnit.Framework.Assert.That(result.transactionStatus, Is.False);
+        NUnit.Framework.Assert.AreEqual("PAYMENT_FAILED", result.errorCode);
     }
 
     [Test] //M3-08
-    public void LiveApi_CurrencyEnforcment_EURtoCAD()
+    public async Task LiveApi_CurrencyEnforcment_EURtoCAD()
     {
-        /*
-            Live API unsupported currency enforcement (e.g., submitting EUR to CAD location).
-        */
+        //Arrange
+
+        //Create a new payment request
+        PaymentRequest request = new PaymentRequest
+        {
+            sourceId = "cnon:card-nonce-ok",
+            amountInCents = 1000,
+            currencyType = Currency.Eur,
+            idempotencyKey = Guid.NewGuid().ToString()
+        };
+
+        //Create a new payment response
+        var response = new CreatePaymentResponse
+        {
+            Payment = new Payment
+            {
+                Id = "payment-003",
+                Status = "FAILED",
+                AmountMoney = new Money
+                {
+                    Amount = 1000,
+                    Currency = Currency.Cad,
+                }   
+            }
+        };
+
+        //Set up the mock text to create an asyncronous payment
+        _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(response);
+
+        var paymentStatusResponse = new GetPaymentResponse
+        {
+            Payment = new Payment
+            {
+                Id = "payment-003",
+                Status = "FAILED",
+                AmountMoney = new Money
+                {
+                    Amount = 1000,
+                    Currency = Currency.Eur
+                }
+            }
+        };
+
+        //Set up the mock text to get the asyncronous payment
+        _gatewayMock
+            .Setup(x => x.GetPaymentAsync("payment-003"))
+            .ReturnsAsync(paymentStatusResponse);
+
+        var result = await _service.ProcessPaymentAsync(request);
+
+        NUnit.Framework.Assert.That(result.transactionStatus, Is.False);
+        NUnit.Framework.Assert.AreEqual("PAYMENT_FAILED", result.errorCode);
     }
 
     [Test] //M3-09
-    public void LiveApi_IdempotencyKeyVerification_DuplicateIdempotencyKey()
+    public async Task LiveApi_IdempotencyKeyVerification_DuplicateIdempotencyKey()
     {
         /*
             Live API idempotency key header verification using duplicate idempotency_key.
@@ -112,7 +206,7 @@ public class SquareSandboxTests {
     }
 
     [Test] //M3-10
-    public void LiveApi_TransactionStatus_GETv2Payments()
+    public async Task LiveApi_TransactionStatus_GETv2Payments()
     {
         /*
             Live API transaction status query (GET /v2/payments/{payment_id}).
