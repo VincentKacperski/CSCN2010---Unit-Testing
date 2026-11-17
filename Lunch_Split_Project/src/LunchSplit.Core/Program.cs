@@ -18,20 +18,24 @@ namespace SquarePaymentsApplication
             -- Manages the life time of the application
             -- Provides hosting servies
             */
-            var builder = Host.CreateApplicationBuilder(args);
+            HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
             builder.Services.AddSingleton(provider =>
             {
                 IConfiguration configuration = provider.GetRequiredService<IConfiguration>();
-                var accessToken = configuration["Square:AccessToken"] ?? throw new InvalidOperationException("Missing Token!");
-                return new SquareClient(accessToken);
+                string? accessToken = configuration["Square:AccessToken"] ?? throw new InvalidOperationException("Missing Token!");
+                return new SquareClient(accessToken,new ClientOptions
+                {
+                    BaseUrl = SquareEnvironment.Sandbox, //Set the sandbox environment
+                    Timeout = TimeSpan.FromSeconds(10) //Set a Http timeout of 5 seconds
+                });
             });
             
             //On instance can be processed per scoped 
             builder.Services.AddScoped<ISquarePaymentsGateway, SquarePaymentsGateway>();
             builder.Services.AddScoped<IPaymentProcessor, SquarePaymentService>();
 
-            var host = builder.Build();
+            IHost host = builder.Build();
             await host.RunAsync();
 
         }

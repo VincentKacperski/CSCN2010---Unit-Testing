@@ -6,8 +6,9 @@ using Square.Payments;
 [TestFixture]
 public class SquareSandboxTests {
 
-    private Mock<ISquarePaymentsGateway> _gatewayMock;
-    private SquarePaymentService _service;
+    private Mock<ISquarePaymentsGateway> _gatewayMock = null!;
+    private SquarePaymentService _service = null!;
+    //null! is safe since all tests will be initialized with setup
 
     [SetUp] 
     public void Setup()
@@ -58,7 +59,7 @@ public class SquareSandboxTests {
             Payment = new Payment
             {
                 Id = "payment-001",
-                Status = "COMPLETED",
+                Status = "Completed",
                 AmountMoney = new Money
                 {
                     Amount = 1000,

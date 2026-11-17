@@ -39,12 +39,7 @@ public class SquarePaymentsGateway : ISquarePaymentsGateway
 
       try
       {
-          var response = await _client.Payments.GetAsync(request);
-
-          Console.WriteLine($"Response null: {response == null}");
-          Console.WriteLine($"Payment ID: {response?.Payment?.Id}");
-          Console.WriteLine($"Payment Status: {response?.Payment?.Status}");
-
+          GetPaymentResponse response = await _client.Payments.GetAsync(request);
           return response;
       }
       catch (Exception ex)

@@ -1,42 +1,84 @@
 using Moq;
-using Moq.Protected;
 using NUnit.Framework;
+using Square;
+using Square.Payments;
+using System.Net.Http;
 
-namespace PaymentProcessorMoq.Tests;
+  [TestFixture]
+  public class PaymentProcessorMoqTests {
 
-[TestClass]
-public class PaymentProcessorMoqTests {
+    private Mock<ISquarePaymentsGateway> _gatewayMock = null!;
+    private SquarePaymentService _service = null!;
 
-    [TestMethod] //M3-03
-    public void SimulateGatewayNetwork_ConfiguringMoq_ThrowHttpExcpetion()
+    [SetUp]
+    public void Setup()
     {
-       /*
-         Simulate gateway network timeout by configuring Moq to throw HttpRequestException.
-       */
+      //Set up a new gateway mock object
+      _gatewayMock = new Mock<ISquarePaymentsGateway>();
+
+      //Create the new gatway mock object
+      _service = new SquarePaymentService(_gatewayMock.Object);
+
     }
 
-    [TestMethod] //M3-04
-    public void ParameterInvocation_ProcessPaymentAsync_MoqVerify()
+    [Test] //M3-03
+    public async Task SimulateGatewayNetwork_ConfiguringMoq_ThrowHttpExcpetion()
     {
-       /*
-         Parameter & invocation verification on ProcessPaymentAsync using Mock.Verify().
-       */
+        /*
+          Simulate gateway network timeout by configuring Moq to throw HttpRequestException.
+        */
+        PaymentRequest request = new PaymentRequest
+        {
+            sourceId = "cnon:card-nonce-ok",
+            amountInCents = 1000,
+            currencyType = Currency.Cad,
+            idempotencyKey = Guid.NewGuid().ToString()
+        };
+
+        //Set up a gateway mock, a new payment request that throws an HttpRequestException
+        _gatewayMock
+        .Setup(x => x.CreatePaymentAsync(
+            It.IsAny<CreatePaymentRequest>()))
+        .ThrowsAsync(new HttpRequestException(
+            "The request timed out while contacting Square."));
+
+        // Act & Assert
+        HttpRequestException? exception = await NUnit.Framework.Assert.ThrowsAsync<HttpRequestException>(
+        async () => await _service.ProcessPaymentAsync(request));
+
+        _gatewayMock.Verify(x => x.CreatePaymentAsync(
+        It.IsAny<CreatePaymentRequest>()), Times.Once);
     }
 
-    [TestMethod] //M3-05
-    public void PreconditionShortCircut_ZeroBill_PassedPaymentManager()
+    [Test] //M3-04
+    public async Task ParameterInvocation_ProcessPaymentAsync_MoqVerify()
     {
-       /*
-         Precondition short-circuit: $0.00 bill request passed to payment manager.
-       */
+      /*
+        Parameter & invocation verification on ProcessPaymentAsync using Mock.Verify().
+      */
     }
 
-    [TestMethod] //M3-06
-    public void BatchPayment_Iteration_FourAttendeeSplit()
+    [Test] //M3-05
+    public async Task PreconditionShortCircut_ZeroBill_PassedPaymentManager()
     {
-       /*
-         Batch payment iteration across a 4-attendee split bill.
-       */
+      /*
+        Precondition short-circuit: $0.00 bill request passed to payment manager.
+      */
     }
 
-}
+    //M3-06
+    public async Task BatchPayment_Iteration_FourAttendeeSplit()
+    {
+      /*
+        Batch payment iteration across a 4-attendee split bill.
+      */
+    }
+
+    //M3-07
+    public async Task BatchFailure_TwoSucced_ThreeAttendeeSplit()
+    {
+      /*
+         Partial batch failure resilliance: attendee #2 declines while #1 and #3 succeed 
+      */
+    }
+  }
