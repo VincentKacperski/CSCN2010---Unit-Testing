@@ -8,9 +8,8 @@ public class SquareSandboxTests {
 
     private Mock<ISquarePaymentsGateway> _gatewayMock = null!;
     private SquarePaymentService _service = null!;
-    //null! is safe since all tests will be initialized with setup
 
-    [SetUp] 
+    [SetUp]
     public void Setup()
     {
         //Set up a new gateway mock object
@@ -111,7 +110,6 @@ public class SquareSandboxTests {
             }
         };
 
-        //Set up the mock text to create an asyncronous payment
         _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(response);
 
         GetPaymentResponse paymentStatusResponse = new GetPaymentResponse
@@ -128,7 +126,6 @@ public class SquareSandboxTests {
             }
         };
 
-        //Set up the mock text to get the asyncronous payment
         _gatewayMock
             .Setup(x => x.GetPaymentAsync("payment-002"))
             .ReturnsAsync(paymentStatusResponse);
@@ -145,7 +142,6 @@ public class SquareSandboxTests {
     public async Task LiveApi_CurrencyEnforcment_EURtoCAD()
     {
         //Arrange
-        //Create a new payment request
         PaymentRequest request = new PaymentRequest
         {
             sourceId = "cnon:card-nonce-ok",
@@ -201,9 +197,6 @@ public class SquareSandboxTests {
     [Test] //M3-09
     public async Task LiveApi_IdempotencyKeyVerification_DuplicateIdempotencyKey()
     {
-        /*
-            Live API idempotency key header verification using duplicate idempotency_key.
-        */
         //Arrange
 
         //Create a new payment request
@@ -265,10 +258,7 @@ public class SquareSandboxTests {
     [Test] //M3-10
     public async Task LiveApi_TransactionStatus_GETv2Payments()
     {
-        /*
-            Live API transaction status query (GET /v2/payments/{payment_id}).
-        */
-        //Create a new payment request
+        //Arrange
         PaymentRequest request = new PaymentRequest
         {
             sourceId = "cnon:card-nonce-ok",

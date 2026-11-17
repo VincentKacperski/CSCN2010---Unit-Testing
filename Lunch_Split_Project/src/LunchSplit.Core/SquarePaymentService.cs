@@ -113,7 +113,6 @@ public class SquarePaymentService : IPaymentProcessor
   //Get the status of the current transaction from the client
   public async Task<PaymentStatus> GetTransactionStatusAsync(string paymentId)
   {
-    //This function returns null if it is not configured
     //This method returns our payment response after we created it
     GetPaymentResponse response = await _gateway.GetPaymentAsync(paymentId);
 
@@ -129,6 +128,13 @@ public class SquarePaymentService : IPaymentProcessor
     {
         throw new InvalidOperationException(
             "Null payment object!");
+    }
+
+    //Check if the paymentId is null
+    if (string.IsNullOrWhiteSpace(response.Payment.Id))
+    {
+        throw new InvalidOperationException(
+            "Null paymentId!");
     }
 
     //Get payment details from response

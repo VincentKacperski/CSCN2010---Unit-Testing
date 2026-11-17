@@ -1,7 +1,7 @@
 public class PaymentResult {
 
     //Get the payment source card (payment_nonce)
-    public string? paymentId {get; set;} = string.Empty;
+    public string? paymentId {get; set;}
     //Represents the status of the payment
     public bool transactionStatus {get; set;}
     //Represents a currency in total cents

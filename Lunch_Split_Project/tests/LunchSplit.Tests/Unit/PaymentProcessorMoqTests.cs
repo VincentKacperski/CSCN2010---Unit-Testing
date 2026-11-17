@@ -24,9 +24,7 @@ using System.Net.Http;
     [Test] //M3-03
     public async Task SimulateGatewayNetwork_ConfiguringMoq_ThrowHttpExcpetion()
     {
-        /*
-          Simulate gateway network timeout by configuring Moq to throw HttpRequestException.
-        */
+        //Assert
         PaymentRequest request = new PaymentRequest
         {
             sourceId = "cnon:card-nonce-ok",
@@ -35,7 +33,7 @@ using System.Net.Http;
             idempotencyKey = Guid.NewGuid().ToString()
         };
 
-        //Set up a gateway mock, a new payment request that throws an HttpRequestException
+        //Set up a gateway mock for a payment request that throws an HttpRequestException
         _gatewayMock
         .Setup(x => x.CreatePaymentAsync(
             It.IsAny<CreatePaymentRequest>()))
@@ -45,17 +43,13 @@ using System.Net.Http;
         // Act & Assert
         HttpRequestException? exception = await NUnit.Framework.Assert.ThrowsAsync<HttpRequestException>(
         async () => await _service.ProcessPaymentAsync(request));
-
-        _gatewayMock.Verify(x => x.CreatePaymentAsync(
-        It.IsAny<CreatePaymentRequest>()), Times.Once);
+        _gatewayMock.Verify(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>()), Times.Once);
     }
 
     [Test] //M3-04
     public async Task ParameterInvocation_ProcessPaymentAsync_MoqVerify()
     {
-      /*
-        Parameter & invocation verification on ProcessPaymentAsync using Mock.Verify().
-      */
+      //Assert
       PaymentRequest request = new PaymentRequest
       {
           sourceId = "cnon:card-nonce-ok",
@@ -74,7 +68,6 @@ using System.Net.Http;
       };
 
       //Set up a gateway mock, a new payment request that throws an HttpRequestException
-      //Set upp the mock text to create an asyncronous payment
       _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(paymentResponse);
 
       // Act 
@@ -90,9 +83,7 @@ using System.Net.Http;
     [Test] //M3-05
     public async Task PreconditionShortCircut_ZeroBill_PassedPaymentManager()
     {
-      /*
-        Precondition short-circuit: $0.00 bill request passed to payment manager.
-      */
+      //Act
       PaymentRequest request = new PaymentRequest
       {
           sourceId = "cnon:card-nonce-ok",
@@ -101,6 +92,7 @@ using System.Net.Http;
           idempotencyKey = Guid.NewGuid().ToString()
       };
 
+      //Act and Assert
       try
       {
         await _service.ProcessPaymentAsync(request);
@@ -118,10 +110,6 @@ using System.Net.Http;
     //M3-06
     public async Task BatchPayment_Iteration_FourAttendeeSplit()
     {
-      /*
-        Batch payment iteration across a 4-attendee split bill.
-      */
-      
       //Arrange
       PaymentRequest request = new PaymentRequest
       {
@@ -154,10 +142,6 @@ using System.Net.Http;
     //M3-07
     public async Task BatchFailure_TwoSucced_ThreeAttendeeSplit()
     {
-      /*
-         Partial batch failure resilliance: attendee #2 declines while #1 and #3 succeed 
-      */
-
       // Arrange
 
       //Create a array of payment statuses that each unique payment request will be given
