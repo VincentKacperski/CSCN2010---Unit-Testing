@@ -93,6 +93,27 @@ using System.Net.Http;
       /*
         Precondition short-circuit: $0.00 bill request passed to payment manager.
       */
+      //Act
+      PaymentRequest request = new PaymentRequest
+      {
+          sourceId = "cnon:card-nonce-ok",
+          amountInCents = 0,
+          currencyType = Currency.Cad,
+          idempotencyKey = Guid.NewGuid().ToString()
+      };
+
+      try
+      {
+        await _service.ProcessPaymentAsync(request);
+      }
+      catch (ArgumentException ex)
+      {
+        NUnit.Framework.Assert.That(ex.Message,
+        Does.Contain("Payment amount must be greater than zero."));
+      }
+
+      // Verify that the gateway was never called
+      _gatewayMock.Verify(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>()), Times.Never);
     }
 
     //M3-06
