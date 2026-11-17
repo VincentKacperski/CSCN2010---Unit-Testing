@@ -157,5 +157,42 @@ using System.Net.Http;
       /*
          Partial batch failure resilliance: attendee #2 declines while #1 and #3 succeed 
       */
+
+      // Arrange
+
+      //Create a array of payment statuses that each unique payment request will be given
+      string[] transactionStatuses = {"Completed","Failed","Completed"};
+      
+      //Create an array of payment results using each status
+      CreatePaymentResponse[] paymentResults = transactionStatuses.Select((status, index) => new CreatePaymentResponse
+      {
+        Payment = new Payment
+        {
+            Id = Guid.NewGuid().ToString(), //Create a new generated user id
+            Status = status //Assign a unique payment status
+        }
+      }).ToArray(); 
+
+      int counter = 0; //Payment counter to count each newly created payment Moq
+      List<PaymentResult> totalResults = new List<PaymentResult>();
+      _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(() => paymentResults[counter++]);
+
+      // Act 
+      for (int i = 0; i<2; i++) {
+        PaymentRequest request = new PaymentRequest //Create a new payment request for each attendee
+        {
+          sourceId = "cnon:card-nonce-ok",
+          amountInCents = 1000,
+          currencyType = Currency.Cad,
+          idempotencyKey = Guid.NewGuid().ToString()
+        };
+        totalResults.Add(await _service.ProcessPaymentAsync(request)); //Add each payment result to a list of results
+      }
+    
+      //Assert
+      NUnit.Framework.Assert.That(totalResults.Count, Is.EqualTo(3));
+      NUnit.Framework.Assert.That(totalResults.Count(x => x.transactionStatus), Is.EqualTo(2));
+      NUnit.Framework.Assert.That(totalResults.Count(x => !x.transactionStatus), Is.EqualTo(1));
+
     }
   }
