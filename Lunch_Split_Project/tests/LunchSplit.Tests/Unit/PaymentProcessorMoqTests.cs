@@ -56,6 +56,35 @@ using System.Net.Http;
       /*
         Parameter & invocation verification on ProcessPaymentAsync using Mock.Verify().
       */
+      PaymentRequest request = new PaymentRequest
+      {
+          sourceId = "cnon:card-nonce-ok",
+          amountInCents = 3578,
+          currencyType = Currency.Cad,
+          idempotencyKey = Guid.NewGuid().ToString()
+      };
+
+      CreatePaymentResponse paymentResponse = new CreatePaymentResponse
+      {
+        Payment = new Payment
+        {
+            Id = "moq-001",
+            Status = "Completed"
+        }
+      };
+
+      //Set up a gateway mock, a new payment request that throws an HttpRequestException
+      //Set upp the mock text to create an asyncronous payment
+      _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(paymentResponse);
+
+      // Act 
+      PaymentResult result = await _service.ProcessPaymentAsync(request); //Return a payment result
+
+      // Assert
+      NUnit.Framework.Assert.That(result.transactionStatus, Is.True); //Check transaction status
+      _gatewayMock.Verify(x => x.CreatePaymentAsync(It.Is<CreatePaymentRequest>(p =>
+      p.SourceId == request.sourceId && p.AmountMoney != null && p.AmountMoney.Amount == request.amountInCents &&
+      p.AmountMoney.Currency == request.currencyType && p.IdempotencyKey == request.idempotencyKey)), Times.Once);
     }
 
     [Test] //M3-05
