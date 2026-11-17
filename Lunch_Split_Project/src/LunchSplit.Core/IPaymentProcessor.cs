@@ -7,7 +7,6 @@ public interface IPaymentProcessor {
   Task<PaymentStatus> GetTransactionStatusAsync(string transactionId);
   
   //Get the status of a payment refund
-  Task<PaymentRefundResult> RefundPaymentAsync(
-        PaymentRefundRequest request);
+  //Task<PaymentRefundResult> RefundPaymentAsync(PaymentRefundRequest request);
 }
 

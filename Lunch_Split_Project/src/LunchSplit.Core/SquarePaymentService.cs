@@ -161,11 +161,4 @@ public class SquarePaymentService : IPaymentProcessor
       currencyType = payment.AmountMoney?.Currency.ToString(),
     };
   }
-
-  public Task<PaymentRefundResult> RefundPaymentAsync(
-        PaymentRefundRequest request)
-  {
-      throw new NotImplementedException(
-      "Refund implementation is not included yet.");
-  } 
 }
