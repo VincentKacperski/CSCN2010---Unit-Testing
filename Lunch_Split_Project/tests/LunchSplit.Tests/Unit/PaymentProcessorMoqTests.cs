@@ -93,7 +93,6 @@ using System.Net.Http;
       /*
         Precondition short-circuit: $0.00 bill request passed to payment manager.
       */
-      //Act
       PaymentRequest request = new PaymentRequest
       {
           sourceId = "cnon:card-nonce-ok",
@@ -122,6 +121,34 @@ using System.Net.Http;
       /*
         Batch payment iteration across a 4-attendee split bill.
       */
+      
+      //Arrange
+      PaymentRequest request = new PaymentRequest
+      {
+          sourceId = "cnon:card-nonce-ok",
+          amountInCents = 1000,
+          currencyType = Currency.Cad,
+          idempotencyKey = Guid.NewGuid().ToString()
+      };
+
+      CreatePaymentResponse paymentResponse = new CreatePaymentResponse
+      {
+        Payment = new Payment
+        {
+            Id = "moq-006",
+            Status = "Completed"
+        }
+      };
+
+      _gatewayMock.Setup(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>())).ReturnsAsync(paymentResponse);
+
+      // Act 
+      for (int i = 0; i<3; i++) {
+        PaymentResult result = await _service.ProcessPaymentAsync(request);
+      }
+
+      //Assert
+      _gatewayMock.Verify(x => x.CreatePaymentAsync(It.IsAny<CreatePaymentRequest>()), Times.Exactly(4));
     }
 
     //M3-07
