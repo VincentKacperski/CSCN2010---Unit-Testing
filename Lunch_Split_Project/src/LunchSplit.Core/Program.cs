@@ -27,7 +27,6 @@ namespace SquarePaymentsApplication
                 return new SquareClient(accessToken,new ClientOptions
                 {
                     BaseUrl = SquareEnvironment.Sandbox, //Set the sandbox environment
-                    Timeout = TimeSpan.FromSeconds(10) //Set a Http timeout of 5 seconds
                 });
             });
             
